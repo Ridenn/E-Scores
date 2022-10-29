@@ -14,6 +14,9 @@ data class HomeMatchesRemoteResponse(
     @SerializedName("begin_at")
     val beginAt: String?,
 
+    @SerializedName("status")
+    val status: String?,
+
     @SerializedName("name")
     val name: String?,
 
@@ -36,6 +39,7 @@ fun HomeMatchesRemoteResponse.toDomain(): HomeMatchesDomain =
     HomeMatchesDomain(
         id = id,
         beginAt = beginAt,
+        status = status,
         name = name,
         league = league?.toDomain(),
         serie = serie?.toDomain(),

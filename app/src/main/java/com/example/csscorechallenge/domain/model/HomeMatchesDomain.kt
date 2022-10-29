@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class HomeMatchesDomain(
     val id: Int,
     val beginAt: String? = null,
+    val status: String? = null,
     val name: String? = null,
     val league: LeagueDomain? = null,
     val serie: SerieDomain? = null,

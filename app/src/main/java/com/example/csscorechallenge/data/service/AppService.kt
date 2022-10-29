@@ -11,4 +11,8 @@ interface AppService {
         @Query(value = "page[number]") page: Int,
         @Query(value = "page[size]") limit: Int
     ) : List<HomeMatchesRemoteResponse>
+
+    @GET("csgo/matches/running")
+    suspend fun getRunningHomeMatches(
+    ) : List<HomeMatchesRemoteResponse>
 }

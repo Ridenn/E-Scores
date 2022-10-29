@@ -1,6 +1,7 @@
 package com.example.csscorechallenge.utils
 
 import android.annotation.SuppressLint
+import com.example.csscorechallenge.extensions.toDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -14,10 +15,9 @@ object FormatDateUtils {
 
     fun convertToReaderReadableDate(readerDate: String): String? {
         val sdfMonthDay = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.getDefault())
-        sdfMonthDay.timeZone = TimeZone.getTimeZone("UTC")
 
+        val resultDate = readerDate.toDate("yyyy-MM-dd'T'HH:mm:ss")
         val current = sdfMonthDay.format(Date())
-        val resultDate = Date(toCalendar(readerDate).timeInMillis)
 
         return if (current == sdfMonthDay.format(resultDate)) {
             "Hoje, " + simpleDateFormat(HOUR_MINUTE_FORMAT).format(resultDate)
@@ -47,17 +47,4 @@ object FormatDateUtils {
 
         return daysDifference.toInt()
     }
-
-    @SuppressLint("SimpleDateFormat")
-    fun toCalendar(dateString: String): Calendar {
-        val calendar = GregorianCalendar.getInstance()
-        val newDate = dateString.replace("Z", "")
-        val date = SimpleDateFormat(DEFAULT_PATTERN_SIMPLE_DATE_FORMAT).parse(newDate)
-        date?.let {
-            calendar.time = it
-        }
-
-        return calendar
-    }
-
 }

@@ -19,4 +19,11 @@ class HomeMatchesRepositoryImpl @Inject constructor(
             it.toDomain()
         }
     }
+
+    override suspend fun getRunningHomeMatches(): List<HomeMatchesDomain> {
+        val result = service.getRunningHomeMatches()
+        return result.map {
+            it.toDomain()
+        }
+    }
 }

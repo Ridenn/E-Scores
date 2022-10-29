@@ -61,7 +61,6 @@ class HomeMatchesFragment : Fragment(),
     }
 
     override fun onMatchClick(match: HomeMatchesDomain) {
-        Log.d("WTF", "Passou aqui")
         findNavController().navigate(R.id.action_matchesFragment_to_matchDetailsFragment)
     }
 
@@ -84,6 +83,23 @@ class HomeMatchesFragment : Fragment(),
         homeMatchesViewModel.getHomeMatchesLiveData.observe(viewLifecycleOwner) { homeMatches ->
             handleGetHomeMatches(homeMatches)
         }
+
+        homeMatchesViewModel.getRunningHomeMatchesLiveData.observe(viewLifecycleOwner) { homeMatches ->
+            handleRunningGetHomeMatches(homeMatches)
+        }
+    }
+
+    private fun handleRunningGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetRunningHomeMatchesState?) {
+        when (homeMatchesState) {
+            is HomeMatchesViewModel.GetRunningHomeMatchesState.BindData -> {
+                homeMatchesViewModel.getHomeMatches(
+                    homeMatchesState.page,
+                    homeMatchesState.appendData,
+                    homeMatchesState.matchList
+                )
+            }
+            else -> {}
+        }
     }
 
     private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState?) {
@@ -95,10 +111,10 @@ class HomeMatchesFragment : Fragment(),
                 homeMatchesAdapter?.append(homeMatchesState.matchList)
             }
             is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
-
+                // TODO - toast de falha
             }
             is HomeMatchesViewModel.GetHomeMatchesState.NetworkError -> {
-
+                // TODO - toast de "sem internet"
             }
             else -> {}
         }
@@ -109,15 +125,7 @@ class HomeMatchesFragment : Fragment(),
     ) {
         val mutableMatchList = matchList.toMutableList()
 
-//        matchList.forEach { match ->
-//            if (match.opponents?.size != 2) {
-//                if (match.opponents?.size != 1) {
-//                    mutableMatchList.remove(match)
-//                }
-//            }
-//        }
-
-        homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
+        homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this, requireContext())
         binding?.homeMatchesRecyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             layoutManager = linearLayoutManager
@@ -131,15 +139,6 @@ class HomeMatchesFragment : Fragment(),
                     fetchData(currentPage, true)
                 }
             })
-
-//            binding?.homeMatchesRecyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                    super.onScrollStateChanged(recyclerView, newState)
-//                    if (!recyclerView.canScrollVertically(1)) {
-//                        Log.d("WTF", "Chegou no fim")
-//                    }
-//                }
-//            })
         }
     }
 
@@ -153,7 +152,7 @@ class HomeMatchesFragment : Fragment(),
     }
 
     private fun fetchData(page: Int = INITIAL_PAGE, appendData: Boolean = false) {
-        homeMatchesViewModel.getHomeMatches(page, appendData)
+        homeMatchesViewModel.getRunningHomeMatches(page, appendData)
     }
 
     companion object {

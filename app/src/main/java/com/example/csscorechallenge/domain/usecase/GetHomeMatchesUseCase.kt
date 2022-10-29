@@ -26,4 +26,12 @@ class GetHomeMatchesUseCase @Inject constructor(
         }
             .flowOn(defaultDispatcher)
             .catch { throwable -> emit(Result.failure(throwable)) }
+
+    fun getRunningHomeMatches() : Flow<Result<List<HomeMatchesDomain>>> =
+        flow {
+            val result = repository.getRunningHomeMatches()
+            emit(Result.success(result))
+        }
+            .flowOn(defaultDispatcher)
+            .catch { throwable -> emit(Result.failure(throwable)) }
 }
