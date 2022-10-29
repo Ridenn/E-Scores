@@ -19,7 +19,7 @@
             android:id="@+id/homeMatchesTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_team_player_left_rounded"
+            android:background="@drawable/bg_team_player_right_rounded"
             android:gravity="center"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"

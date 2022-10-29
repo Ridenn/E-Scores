@@ -3,8 +3,8 @@
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <corners
-                android:topRightRadius="12dp"
-                android:bottomRightRadius="12dp"/>
+                android:topLeftRadius="12dp"
+                android:bottomLeftRadius="12dp"/>
             <solid android:color="@color/card_brand" />
             <size android:width="200dp" android:height="54dp" />
         </shape>

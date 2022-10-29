@@ -102,6 +102,13 @@
         tools:itemCount="5"
         tools:listitem="@layout/item_team_player_right" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/matchDetailsGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <ProgressBar
         android:id="@+id/matchDetailsProgressBar"
         android:layout_width="wrap_content"
