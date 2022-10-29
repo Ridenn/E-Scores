@@ -1,6 +1,5 @@
 package com.example.csscorechallenge.ui.homematches.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,18 +75,24 @@ class HomeMatchesAdapter(
         fun bind(match: HomeMatchesDomain) {
 
             homeMatchesDateView.apply {
-                text = match.beginAt?.let { FormatDateUtils.convertToReaderReadableDate(it) }
+                text = match.beginAt?.let {
+                    FormatDateUtils.convertToReaderReadableDate(it)
+                }
             }
 
             firstTeamView.apply {
                 bind(
-                    team = match.opponents?.first()
+                    teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
+                    teamName = match.opponents?.first()?.opponent?.name
+                        ?: resources.getString(R.string.matches_tba_label)
                 )
             }
 
             secondTeamView.apply {
                 bind(
-                    team = match.opponents?.last()
+                    teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
+                    teamName = match.opponents?.last()?.opponent?.name
+                        ?: resources.getString(R.string.matches_tba_label)
                 )
             }
 

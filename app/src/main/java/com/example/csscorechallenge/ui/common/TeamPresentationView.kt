@@ -5,9 +5,10 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
+import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ViewTeamPresentedBinding
-import com.example.csscorechallenge.domain.model.OpponentsDomain
 
 class TeamPresentationView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -18,19 +19,25 @@ class TeamPresentationView @JvmOverloads constructor(
     )
 
     fun bind(
-        team: OpponentsDomain? = null
+        teamImageCover: String? = null,
+        teamName: String? = null
     ) {
-        setCoverImage(team?.opponent?.imageUrl)
-        setTeamName(team?.opponent?.name)
+        setCoverImage(teamImageCover)
+        setTeamName(teamName)
     }
 
     private fun setCoverImage(coverImageUrl: String?) {
         coverImageUrl?.let { validUrl ->
             Glide.with(binding.viewTeamPresentedTeamImageView.context)
                 .load(Uri.parse(validUrl.trim()))
+                .error(R.drawable.ic_team_placeholder)
                 .into(binding.viewTeamPresentedTeamImageView)
         } ?: run {
-
+            binding.viewTeamPresentedTeamImageView.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources, R.drawable.ic_team_placeholder, null
+                )
+            )
         }
     }
 

@@ -5,7 +5,9 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
+import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ViewLeagueSeriesBinding
 
 class LeagueSeriesView @JvmOverloads constructor(
@@ -29,9 +31,14 @@ class LeagueSeriesView @JvmOverloads constructor(
         coverImageUrl?.let { validUrl ->
             Glide.with(binding.viewLeagueSeriesImageView.context)
                 .load(Uri.parse(validUrl.trim()))
+                .error(R.drawable.ic_team_placeholder)
                 .into(binding.viewLeagueSeriesImageView)
         } ?: run {
-
+            binding.viewLeagueSeriesImageView.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources, R.drawable.ic_team_placeholder, null
+                )
+            )
         }
     }
 

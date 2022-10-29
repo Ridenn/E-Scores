@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
@@ -16,8 +18,8 @@ import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.utils.EndlessRecyclerOnScrollListener
-import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class HomeMatchesFragment : Fragment(),
     HomeMatchesAdapter.HomeMatchesAdapterListClickListener {
@@ -109,11 +111,13 @@ class HomeMatchesFragment : Fragment(),
     ) {
         val mutableMatchList = matchList.toMutableList()
 
-        matchList.forEach { match ->
-            if (match.opponents?.size != 2) {
-                mutableMatchList.remove(match)
-            }
-        }
+//        matchList.forEach { match ->
+//            if (match.opponents?.size != 2) {
+//                if (match.opponents?.size != 1) {
+//                    mutableMatchList.remove(match)
+//                }
+//            }
+//        }
 
         homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
         binding?.homeMatchesRecyclerView?.apply {
@@ -129,6 +133,15 @@ class HomeMatchesFragment : Fragment(),
                     fetchData(currentPage, true)
                 }
             })
+
+//            binding?.homeMatchesRecyclerView?.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                    super.onScrollStateChanged(recyclerView, newState)
+//                    if (!recyclerView.canScrollVertically(1)) {
+//                        Log.d("WTF", "Chegou no fim")
+//                    }
+//                }
+//            })
         }
     }
 
