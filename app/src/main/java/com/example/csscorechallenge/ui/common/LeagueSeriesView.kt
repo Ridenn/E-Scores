@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.csscorechallenge.databinding.ViewLeagueSeriesBinding
-import com.example.csscorechallenge.databinding.ViewTeamPresentedBinding
 
 class LeagueSeriesView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -17,16 +16,18 @@ class LeagueSeriesView @JvmOverloads constructor(
 
     fun bind(
         coverImageUrl: String? = null,
-        teamName: String? = null
+        leagueName: String? = null,
+        serieName: String? = null
     ) {
         setCoverImage(coverImageUrl)
+        setTeamName(leagueName, serieName)
     }
 
     private fun setCoverImage(coverImageUrl: String?) {
 
     }
 
-    private fun setTeamName(teamName: String?) {
-        binding.viewLeagueSeriesLabel.text = teamName
+    private fun setTeamName(leagueName: String?, serieName: String?) {
+        binding.viewLeagueSeriesLabel.text = "$leagueName + $serieName"
     }
 }

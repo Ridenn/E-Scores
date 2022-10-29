@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/homeMatchesToolbar">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/homeMatchesRecyclerList"
+            android:id="@+id/homeMatchesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

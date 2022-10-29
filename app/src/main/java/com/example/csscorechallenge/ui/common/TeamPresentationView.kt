@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.csscorechallenge.databinding.ViewTeamPresentedBinding
+import com.example.csscorechallenge.domain.model.OpponentsDomain
 
 class TeamPresentationView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -15,10 +16,10 @@ class TeamPresentationView @JvmOverloads constructor(
     )
 
     fun bind(
-        coverImageUrl: String? = null,
-        teamName: String? = null
+        team: OpponentsDomain? = null
     ) {
-        setCoverImage(coverImageUrl)
+        setCoverImage(team?.opponent?.imageUrl)
+        setTeamName(team?.opponent?.name)
     }
 
     private fun setCoverImage(coverImageUrl: String?) {

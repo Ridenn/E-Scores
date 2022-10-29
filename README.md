@@ -1,4 +1,4 @@
-# CS Scores
+# CSScores
 
 ## What is it?
 
@@ -8,7 +8,7 @@
 ## Content
 > List of all README contents
 
-- [Skuirrel](#CS Scores)
+- [CS Scores](#CSScores)
 - [Setup](#setup)
 - [Technologies](#technologies)
 - [License](#license)

@@ -6,11 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
+import com.example.csscorechallenge.domain.model.HomeMatchesDomain
+import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
+import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
+import com.example.csscorechallenge.utils.EndlessRecyclerOnScrollListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeMatchesFragment : Fragment() {
+class HomeMatchesFragment : Fragment(),
+    HomeMatchesAdapter.HomeMatchesAdapterListClickListener {
+
+    private val homeMatchesViewModel: HomeMatchesViewModel by viewModel()
 
     private var binding: FragmentHomeMatchesBinding? = null
+
+    private var homeMatchesAdapter: HomeMatchesAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +38,9 @@ class HomeMatchesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.buttonSecond.setOnClickListener {
-//            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-//        }
+        setUpSwipeListener()
+        setUpViewModelObservers()
+        fetchData()
     }
 
     override fun onResume() {
@@ -40,5 +52,93 @@ class HomeMatchesFragment : Fragment() {
         super.onDestroyView()
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         binding = null
+    }
+
+    override fun onMatchClick(match: HomeMatchesDomain) {
+        //        binding.buttonSecond.setOnClickListener {
+//            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+//        }
+    }
+
+    private fun setUpSwipeListener() {
+        binding?.homeMatchesSwipeRefresh?.setOnRefreshListener {
+            fetchData()
+        }
+    }
+
+    private fun setUpViewModelObservers() {
+        homeMatchesViewModel.showLoadingLiveData.observe(viewLifecycleOwner) { showLoading ->
+            if (showLoading) showOrHideLoading(isShow = true)
+            showOrHideLoading(isShow = false)
+        }
+
+        homeMatchesViewModel.getHomeMatchesLiveData.observe(viewLifecycleOwner) { homeMatches ->
+            handleGetHomeMatches(homeMatches)
+        }
+    }
+
+    private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState?) {
+        showOrHideLoading(isShow = false)
+        when (homeMatchesState) {
+            is HomeMatchesViewModel.GetHomeMatchesState.BindData -> {
+                bindData(homeMatchesState.matchList)
+            }
+            is HomeMatchesViewModel.GetHomeMatchesState.AppendData -> {
+                homeMatchesAdapter?.append(homeMatchesState.matchList)
+            }
+            is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
+
+            }
+            is HomeMatchesViewModel.GetHomeMatchesState.NetworkError -> {
+
+            }
+            else -> {}
+        }
+    }
+
+    private fun bindData(
+        matchList: List<HomeMatchesDomain>
+    ) {
+        val mutableMatchList = matchList.toMutableList()
+
+        matchList.forEach { match ->
+            if (match.opponents?.size != 2) {
+                mutableMatchList.remove(match)
+            }
+        }
+
+        homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
+//        homeMatchesAdapter?.setHasStableIds(true)
+        binding?.homeMatchesRecyclerView?.apply {
+            val linearLayoutManager = LinearLayoutManager(requireContext())
+            layoutManager = linearLayoutManager
+            setHasFixedSize(true)
+            adapter = homeMatchesAdapter
+            (binding?.homeMatchesRecyclerView?.itemAnimator as SimpleItemAnimator)
+                .supportsChangeAnimations = false
+
+            addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
+                override fun onLoadMore(currentPage: Int) {
+                    fetchData(currentPage, true)
+                }
+            })
+        }
+    }
+
+    private fun showOrHideLoading(isShow: Boolean) {
+        if (isShow) {
+            // TODO - fazer loading padrao do sistema
+            binding?.homeMatchesSwipeRefresh?.isRefreshing = false
+        } else {
+
+        }
+    }
+
+    private fun fetchData(page: Int = INITIAL_PAGE, appendData: Boolean = false) {
+        homeMatchesViewModel.getHomeMatches(page, appendData)
+    }
+
+    companion object {
+        private const val INITIAL_PAGE = 1
     }
 }
