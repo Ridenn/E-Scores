@@ -97,10 +97,11 @@
 
             <com.example.csscorechallenge.ui.common.LeagueSeriesView
                 android:id="@+id/homeMatchesLeagueSeries"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
                 android:layout_marginStart="15dp"
+                android:layout_marginEnd="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/homeMatchesBottomDividerView"/>

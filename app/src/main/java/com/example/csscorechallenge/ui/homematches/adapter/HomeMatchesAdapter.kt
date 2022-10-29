@@ -31,6 +31,11 @@ class HomeMatchesAdapter(
         }
     }
 
+    fun updateHomeMatchesList() {
+        matchList.clear()
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: HomeMatchesAdapterViewHolder, position: Int) {
         if (matchList[position].opponents?.size == 2) {
             holder.bind(matchList[position])
@@ -70,7 +75,6 @@ class HomeMatchesAdapter(
 
         fun bind(match: HomeMatchesDomain) {
 
-            // TODO - formatar data de forma inteligente
             homeMatchesDateView.apply {
                 text = match.beginAt?.let { FormatDateUtils.convertToReaderReadableDate(it) }
             }

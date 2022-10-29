@@ -1,9 +1,11 @@
 package com.example.csscorechallenge.ui.common
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
 import com.example.csscorechallenge.databinding.ViewLeagueSeriesBinding
 
 class LeagueSeriesView @JvmOverloads constructor(
@@ -24,7 +26,13 @@ class LeagueSeriesView @JvmOverloads constructor(
     }
 
     private fun setCoverImage(coverImageUrl: String?) {
+        coverImageUrl?.let { validUrl ->
+            Glide.with(binding.viewLeagueSeriesImageView.context)
+                .load(Uri.parse(validUrl.trim()))
+                .into(binding.viewLeagueSeriesImageView)
+        } ?: run {
 
+        }
     }
 
     private fun setTeamName(leagueName: String?, serieName: String?) {

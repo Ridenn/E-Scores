@@ -14,6 +14,8 @@ object FormatDateUtils {
 
     fun convertToReaderReadableDate(readerDate: String): String? {
         val sdfMonthDay = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.getDefault())
+        sdfMonthDay.timeZone = TimeZone.getTimeZone("UTC")
+
         val current = sdfMonthDay.format(Date())
         val resultDate = Date(toCalendar(readerDate).timeInMillis)
 
@@ -31,7 +33,9 @@ object FormatDateUtils {
     }
 
     private fun simpleDateFormat(format: String): SimpleDateFormat {
-        return SimpleDateFormat(format, Locale.getDefault())
+        val time = SimpleDateFormat(format, Locale.getDefault())
+        time.timeZone = TimeZone.getDefault()
+        return time
     }
 
     @SuppressLint("SimpleDateFormat")

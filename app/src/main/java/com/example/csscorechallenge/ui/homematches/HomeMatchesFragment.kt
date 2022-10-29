@@ -64,6 +64,7 @@ class HomeMatchesFragment : Fragment(),
 
     private fun setUpSwipeListener() {
         binding?.homeMatchesSwipeRefresh?.setOnRefreshListener {
+            homeMatchesAdapter?.updateHomeMatchesList()
             fetchData()
         }
     }
@@ -110,7 +111,6 @@ class HomeMatchesFragment : Fragment(),
         }
 
         homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
-//        homeMatchesAdapter?.setHasStableIds(true)
         binding?.homeMatchesRecyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             layoutManager = linearLayoutManager
