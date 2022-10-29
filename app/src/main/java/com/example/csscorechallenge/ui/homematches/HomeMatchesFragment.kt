@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
+import com.example.csscorechallenge.extensions.gone
+import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.utils.EndlessRecyclerOnScrollListener
+import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeMatchesFragment : Fragment(),
@@ -71,8 +74,11 @@ class HomeMatchesFragment : Fragment(),
 
     private fun setUpViewModelObservers() {
         homeMatchesViewModel.showLoadingLiveData.observe(viewLifecycleOwner) { showLoading ->
-            if (showLoading) showOrHideLoading(isShow = true)
-            showOrHideLoading(isShow = false)
+            if (showLoading) {
+                showOrHideLoading(isShow = true)
+            } else {
+                showOrHideLoading(isShow = false)
+            }
         }
 
         homeMatchesViewModel.getHomeMatchesLiveData.observe(viewLifecycleOwner) { homeMatches ->
@@ -81,7 +87,6 @@ class HomeMatchesFragment : Fragment(),
     }
 
     private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState?) {
-        showOrHideLoading(isShow = false)
         when (homeMatchesState) {
             is HomeMatchesViewModel.GetHomeMatchesState.BindData -> {
                 bindData(homeMatchesState.matchList)
@@ -129,10 +134,10 @@ class HomeMatchesFragment : Fragment(),
 
     private fun showOrHideLoading(isShow: Boolean) {
         if (isShow) {
-            // TODO - fazer loading padrao do sistema
+            binding?.homeMatchesProgressBar?.visible()
             binding?.homeMatchesSwipeRefresh?.isRefreshing = false
         } else {
-
+            binding?.homeMatchesProgressBar?.gone()
         }
     }
 

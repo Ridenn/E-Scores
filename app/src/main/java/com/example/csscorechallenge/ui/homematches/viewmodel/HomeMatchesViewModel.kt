@@ -33,8 +33,8 @@ class HomeMatchesViewModel constructor(
     val getHomeMatchesLiveData: LiveData<GetHomeMatchesState> = _getHomeMatchesLiveData
 
     fun getHomeMatches(page: Int, appendData: Boolean = true) {
+        _showLoadingLiveData.postValue(true)
         currentPage = if (page == INITIAL_PAGE) {
-            _showLoadingLiveData.postValue(true)
             INITIAL_PAGE
         } else {
             page
