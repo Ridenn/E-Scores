@@ -19,11 +19,11 @@
         android:id="@+id/viewLeagueSeriesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="League + serie"
         android:textColor="@color/white"
         android:textSize="10sp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/viewLeagueSeriesCover"
         app:layout_constraintStart_toEndOf="@+id/viewLeagueSeriesCover"
-        app:layout_constraintTop_toTopOf="@+id/viewLeagueSeriesCover" />
+        app:layout_constraintTop_toTopOf="@+id/viewLeagueSeriesCover"
+        tools:text="League + serie" />
 </androidx.constraintlayout.widget.ConstraintLayout>

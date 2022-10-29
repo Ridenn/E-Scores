@@ -1,5 +1,6 @@
 package com.example.csscorechallenge.ui.homematches.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.csscorechallenge.databinding.ItemMatchReceivedBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.ui.common.LeagueSeriesView
 import com.example.csscorechallenge.ui.common.TeamPresentationView
+import com.example.csscorechallenge.utils.FormatDateUtils
 
 class HomeMatchesAdapter(
     private val matchList: MutableList<HomeMatchesDomain>,
@@ -70,7 +72,7 @@ class HomeMatchesAdapter(
 
             // TODO - formatar data de forma inteligente
             homeMatchesDateView.apply {
-                text = match.beginAt
+                text = match.beginAt?.let { FormatDateUtils.convertToReaderReadableDate(it) }
             }
 
             firstTeamView.apply {
@@ -97,7 +99,5 @@ class HomeMatchesAdapter(
                 setOnClickListener { listener.onMatchClick(match) }
             }
         }
-
     }
-
 }

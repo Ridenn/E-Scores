@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/viewTeamPresentedTeamCover"
+        android:id="@+id/viewTeamPresentedTeamImageView"
         android:layout_width="53dp"
         android:layout_height="60dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,11 +19,10 @@
         android:id="@+id/homeMatchesTeamOneLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time"
         android:textColor="@color/white"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewTeamPresentedTeamCover"
-        tools:text="eyondfdfdffd" />
+        app:layout_constraintTop_toBottomOf="@+id/viewTeamPresentedTeamImageView"
+        tools:text="Time Beta" />
 </androidx.constraintlayout.widget.ConstraintLayout>

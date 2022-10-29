@@ -28,6 +28,6 @@ class LeagueSeriesView @JvmOverloads constructor(
     }
 
     private fun setTeamName(leagueName: String?, serieName: String?) {
-        binding.viewLeagueSeriesLabel.text = "$leagueName + $serieName"
+        binding.viewLeagueSeriesLabel.text = "$leagueName $serieName"
     }
 }

@@ -1,6 +1,7 @@
 package com.example.csscorechallenge.ui.homematches
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class HomeMatchesFragment : Fragment(),
     }
 
     override fun onMatchClick(match: HomeMatchesDomain) {
+        Log.d("WTF", "Passou aqui")
         //        binding.buttonSecond.setOnClickListener {
 //            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
 //        }
