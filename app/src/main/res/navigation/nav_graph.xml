@@ -23,7 +23,17 @@
         tools:layout="@layout/fragment_home_matches" >
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/splashFragment" />
+            android:id="@+id/action_matchesFragment_to_matchDetailsFragment"
+            app:destination="@id/matchDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/matchDetailsFragment"
+        android:name="com.example.csscorechallenge.ui.matchdetails.MatchDetailsFragment"
+        android:label="fragment_match_details"
+        tools:layout="@layout/fragment_match_details">
+
+        <action
+            android:id="@+id/action_matchDetailsFragment_to_matchesFragment"
+            app:destination="@id/matchesFragment" />
     </fragment>
 </navigation>

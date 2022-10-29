@@ -5,12 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.extensions.gone
@@ -62,9 +62,7 @@ class HomeMatchesFragment : Fragment(),
 
     override fun onMatchClick(match: HomeMatchesDomain) {
         Log.d("WTF", "Passou aqui")
-        //        binding.buttonSecond.setOnClickListener {
-//            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-//        }
+        findNavController().navigate(R.id.action_matchesFragment_to_matchDetailsFragment)
     }
 
     private fun setUpSwipeListener() {
