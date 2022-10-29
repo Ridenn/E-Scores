@@ -39,7 +39,9 @@ class SplashFragment : Fragment() {
     }
 
     private fun handleMatchesScreen() {
-        findNavController().navigate(R.id.action_SplashFragment_to_MatchesFragment)
+        findNavController().navigate(
+            SplashFragmentDirections.toHomeMatches()
+        )
     }
 
     override fun onResume() {

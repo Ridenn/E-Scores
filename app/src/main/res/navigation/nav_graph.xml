@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_splash" >
 
         <action
-            android:id="@+id/action_SplashFragment_to_MatchesFragment"
+            android:id="@+id/to_homeMatches"
             app:destination="@id/matchesFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/splashFragment"
@@ -23,7 +23,7 @@
         tools:layout="@layout/fragment_home_matches" >
 
         <action
-            android:id="@+id/action_matchesFragment_to_matchDetailsFragment"
+            android:id="@+id/to_matchDetails"
             app:destination="@id/matchDetailsFragment" />
     </fragment>
     <fragment
@@ -31,6 +31,10 @@
         android:name="com.example.csscorechallenge.ui.matchdetails.MatchDetailsFragment"
         android:label="fragment_match_details"
         tools:layout="@layout/fragment_match_details">
+
+        <argument
+            android:name="selectedMatch"
+            app:argType="com.example.csscorechallenge.domain.model.HomeMatchesDomain" />
 
         <action
             android:id="@+id/action_matchDetailsFragment_to_matchesFragment"

@@ -38,14 +38,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.example.csscorechallenge.ui.common.TeamPresentationView
-            android:id="@+id/homeMatchesFirstTeam"
+            android:id="@+id/matchDetailsFirstTeam"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/homeMatchesVersusLabel"
+            android:id="@+id/matchDetailsVersusLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -53,12 +53,12 @@
             android:textColor="@color/font_80"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/homeMatchesSecondTeam"
-            app:layout_constraintStart_toEndOf="@+id/homeMatchesFirstTeam"
+            app:layout_constraintEnd_toStartOf="@id/matchDetailsSecondTeam"
+            app:layout_constraintStart_toEndOf="@+id/matchDetailsFirstTeam"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.example.csscorechallenge.ui.common.TeamPresentationView
-            android:id="@+id/homeMatchesSecondTeam"
+            android:id="@+id/matchDetailsSecondTeam"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,6 +67,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/matchDetailsDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hoje, 21:00"
@@ -77,8 +78,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeMatchesTeamsVersus" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/matchDetailsFirstTeamPlayersReciclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="-10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_team_player_left" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/matchDetailsSecondTeamPlayersReciclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="-10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_team_player_right" />
+
     <ProgressBar
-        android:id="@+id/homeMatchesProgressBar"
+        android:id="@+id/matchDetailsProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/white"

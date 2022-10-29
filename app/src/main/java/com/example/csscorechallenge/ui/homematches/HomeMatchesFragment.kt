@@ -61,7 +61,9 @@ class HomeMatchesFragment : Fragment(),
     }
 
     override fun onMatchClick(match: HomeMatchesDomain) {
-        findNavController().navigate(R.id.action_matchesFragment_to_matchDetailsFragment)
+        findNavController().navigate(
+            HomeMatchesFragmentDirections.toMatchDetails(match)
+        )
     }
 
     private fun setUpSwipeListener() {
