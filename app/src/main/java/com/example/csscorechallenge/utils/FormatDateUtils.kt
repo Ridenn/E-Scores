@@ -7,6 +7,7 @@ import java.util.*
 
 object FormatDateUtils {
 
+    private const val DEFAULT_PATTERN_SIMPLE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
     private const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"
     private const val HOUR_MINUTE_FORMAT = "HH:mm"
     private const val CALENDAR_FORMAT = "dd.MM HH:mm"
@@ -15,11 +16,11 @@ object FormatDateUtils {
     fun convertToReaderReadableDate(readerDate: String): String? {
         val sdfMonthDay = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.getDefault())
 
-        val resultDate = readerDate.toDate("yyyy-MM-dd'T'HH:mm:ss")
+        val resultDate = readerDate.toDate(DEFAULT_PATTERN_SIMPLE_DATE_FORMAT)
         val current = sdfMonthDay.format(Date())
 
-        return if (current == sdfMonthDay.format(resultDate)) {
-            "Hoje, " + simpleDateFormat(HOUR_MINUTE_FORMAT).format(resultDate)
+        return if (current == resultDate?.let { sdfMonthDay.format(it) }) {
+            "Hoje, " + resultDate?.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
         } else {
             if (getDaysBetweenDates(current, sdfMonthDay.format(resultDate)) > 5) {
                 simpleDateFormat(CALENDAR_FORMAT).format(resultDate)

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -113,10 +114,26 @@ class HomeMatchesFragment : Fragment(),
                 homeMatchesAdapter?.append(homeMatchesState.matchList)
             }
             is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
-                // TODO - toast de falha
+                Log.w("Error", homeMatchesState.throwable)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.generic_error_label),
+                    Toast.LENGTH_LONG
+                ).show()
             }
             is HomeMatchesViewModel.GetHomeMatchesState.NetworkError -> {
-                // TODO - toast de "sem internet"
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.network_error_label),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is HomeMatchesViewModel.GetHomeMatchesState.TimeoutError -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.timeout_error_label),
+                    Toast.LENGTH_LONG
+                ).show()
             }
             else -> {}
         }

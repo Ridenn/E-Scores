@@ -87,7 +87,7 @@ class HomeMatchesAdapter(
                             context,
                             R.drawable.bg_match_time_now_rounded
                         )
-                        homeMatchesDateView.text = "AGORA"
+                        homeMatchesDateView.text = context.getString(R.string.matches_now_label)
                     }
                     else -> {
                         background = AppCompatResources.getDrawable(

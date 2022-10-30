@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.usecase.GetHomeMatchesUseCase
+import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import com.example.csscorechallenge.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class HomeMatchesViewModel constructor(
@@ -27,12 +30,17 @@ class HomeMatchesViewModel constructor(
         data class AppendData(val matchList: List<HomeMatchesDomain>) : GetHomeMatchesState()
         data class Failure(val throwable: Throwable?) : GetHomeMatchesState()
         object NetworkError : GetHomeMatchesState()
+        object TimeoutError : GetHomeMatchesState()
     }
 
     private val _getHomeMatchesLiveData by lazy { SingleLiveEvent<GetHomeMatchesState>() }
     val getHomeMatchesLiveData: LiveData<GetHomeMatchesState> = _getHomeMatchesLiveData
 
-    fun getHomeMatches(page: Int, appendData: Boolean = true, matchList: List<HomeMatchesDomain>? = null) {
+    fun getHomeMatches(
+        page: Int,
+        appendData: Boolean = true,
+        matchList: List<HomeMatchesDomain>? = null
+    ) {
         _showLoadingLiveData.postValue(true)
         currentPage = if (page == INITIAL_PAGE) {
             INITIAL_PAGE
@@ -74,15 +82,32 @@ class HomeMatchesViewModel constructor(
         } else {
             _showLoadingLiveData.postValue(false)
             result.exceptionOrNull()?.let { throwable ->
-                if (throwable is UnknownHostException) {
-                    _getHomeMatchesLiveData.postValue(
-                        GetHomeMatchesState.NetworkError
-                    )
-                } else {
-                    _getHomeMatchesLiveData.postValue(
-                        GetHomeMatchesState.Failure(result.exceptionOrNull())
-                    )
-                }
+                handleThrowable(throwable)
+            }
+        }
+    }
+
+    private fun handleThrowable(throwable: Throwable) {
+        when (throwable) {
+            is HttpException -> {
+                _getHomeMatchesLiveData.postValue(
+                    GetHomeMatchesState.Failure(throwable)
+                )
+            }
+            is UnknownHostException -> {
+                _getHomeMatchesLiveData.postValue(
+                    GetHomeMatchesState.NetworkError
+                )
+            }
+            is SocketTimeoutException -> {
+                _getHomeMatchesLiveData.postValue(
+                    GetHomeMatchesState.TimeoutError
+                )
+            }
+            else -> {
+                _getHomeMatchesLiveData.postValue(
+                    GetHomeMatchesState.Failure(throwable)
+                )
             }
         }
     }
@@ -96,7 +121,8 @@ class HomeMatchesViewModel constructor(
     }
 
     private val _getRunningHomeMatchesLiveData by lazy { SingleLiveEvent<GetRunningHomeMatchesState>() }
-    val getRunningHomeMatchesLiveData: LiveData<GetRunningHomeMatchesState> = _getRunningHomeMatchesLiveData
+    val getRunningHomeMatchesLiveData: LiveData<GetRunningHomeMatchesState> =
+        _getRunningHomeMatchesLiveData
 
     fun getRunningHomeMatches(page: Int, appendData: Boolean) {
         _showLoadingLiveData.postValue(true)
@@ -118,12 +144,20 @@ class HomeMatchesViewModel constructor(
         appendData: Boolean
     ) {
         val homeMatches = result.getOrNull()
-        _getRunningHomeMatchesLiveData.postValue(
-            homeMatches?.let { GetRunningHomeMatchesState.BindData(
-                it,
-                page,
-                appendData
-            ) }
-        )
+        if (result.isSuccess) {
+            _getRunningHomeMatchesLiveData.postValue(
+                homeMatches?.let {
+                    GetRunningHomeMatchesState.BindData(
+                        it,
+                        page,
+                        appendData
+                    )
+                }
+            )
+        } else {
+            result.exceptionOrNull()?.let { throwable ->
+                handleThrowable(throwable)
+            }
+        }
     }
 }

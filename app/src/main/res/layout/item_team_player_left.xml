@@ -46,17 +46,6 @@
                 tools:srcCompat="@tools:sample/avatars" />
         </androidx.cardview.widget.CardView>
 
-<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
-<!--            android:id="@+id/itemTeamPlayerLeftImage"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginEnd="12dp"-->
-<!--            android:layout_marginBottom="9dp"-->
-<!--            android:background="@drawable/bg_team_player_image_rounded"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/itemTeamPlayerLeftIdBox"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,17 +60,17 @@
                 android:id="@+id/itemTeamPlayerLeftNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nickname"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="Nickname"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/itemTeamPlayerLeftName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nome jogador"
                 android:textColor="@color/font_grey_players"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="Nome jogador"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

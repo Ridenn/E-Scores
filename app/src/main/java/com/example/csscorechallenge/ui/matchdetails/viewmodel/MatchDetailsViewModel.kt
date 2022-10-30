@@ -7,6 +7,8 @@ import com.example.csscorechallenge.domain.model.MatchDetailsDomain
 import com.example.csscorechallenge.domain.usecase.GetMatchDetailsUseCase
 import com.example.csscorechallenge.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class MatchDetailsViewModel constructor(
@@ -24,6 +26,7 @@ class MatchDetailsViewModel constructor(
 
         data class Failure(val throwable: Throwable?) : GetMatchDetailsState()
         object NetworkError : GetMatchDetailsState()
+        object TimeoutError : GetMatchDetailsState()
     }
 
     private val _getMatchDetailsLiveData by lazy { SingleLiveEvent<GetMatchDetailsState>() }
@@ -52,15 +55,32 @@ class MatchDetailsViewModel constructor(
         } else {
             _showLoadingLiveData.postValue(false)
             result.exceptionOrNull()?.let { throwable ->
-                if (throwable is UnknownHostException) {
-                    _getMatchDetailsLiveData.postValue(
-                        GetMatchDetailsState.NetworkError
-                    )
-                } else {
-                    _getMatchDetailsLiveData.postValue(
-                        GetMatchDetailsState.Failure(result.exceptionOrNull())
-                    )
-                }
+                handleThrowable(throwable)
+            }
+        }
+    }
+
+    private fun handleThrowable(throwable: Throwable) {
+        when (throwable) {
+            is HttpException -> {
+                _getMatchDetailsLiveData.postValue(
+                    GetMatchDetailsState.Failure(throwable)
+                )
+            }
+            is UnknownHostException -> {
+                _getMatchDetailsLiveData.postValue(
+                    GetMatchDetailsState.NetworkError
+                )
+            }
+            is SocketTimeoutException -> {
+                _getMatchDetailsLiveData.postValue(
+                    GetMatchDetailsState.TimeoutError
+                )
+            }
+            else -> {
+                _getMatchDetailsLiveData.postValue(
+                    GetMatchDetailsState.Failure(throwable)
+                )
             }
         }
     }

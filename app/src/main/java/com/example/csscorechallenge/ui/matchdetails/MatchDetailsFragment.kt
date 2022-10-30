@@ -1,9 +1,11 @@
 package com.example.csscorechallenge.ui.matchdetails
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import com.example.csscorechallenge.ui.matchdetails.adapter.MatchSecondTeamPlaye
 import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import com.example.csscorechallenge.utils.FormatDateUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.logging.Logger
 
 
 class MatchDetailsFragment : Fragment() {
@@ -68,15 +71,30 @@ class MatchDetailsFragment : Fragment() {
     private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetMatchDetailsState?) {
         when (matchDetailsState) {
             is MatchDetailsViewModel.GetMatchDetailsState.BindData -> {
-
                 if (matchDetailsState.isFirstTeam) {
                     bindFirstData(matchDetailsState.team)
                 } else {
                     bindSecondData(matchDetailsState.team)
                 }
             }
-            is MatchDetailsViewModel.GetMatchDetailsState.Failure -> {}
-            is MatchDetailsViewModel.GetMatchDetailsState.NetworkError -> {}
+            is MatchDetailsViewModel.GetMatchDetailsState.Failure -> {
+                Log.w("Error", matchDetailsState.throwable)
+                Toast.makeText(requireContext(), getString(R.string.generic_error_label), Toast.LENGTH_LONG).show()
+            }
+            is MatchDetailsViewModel.GetMatchDetailsState.NetworkError -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.network_error_label),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is MatchDetailsViewModel.GetMatchDetailsState.TimeoutError -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.timeout_error_label),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             else -> {}
         }
     }
