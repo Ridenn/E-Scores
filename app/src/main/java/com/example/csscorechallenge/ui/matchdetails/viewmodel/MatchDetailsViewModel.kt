@@ -3,6 +3,7 @@ package com.example.csscorechallenge.ui.matchdetails.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
 import com.example.csscorechallenge.domain.usecase.GetMatchDetailsUseCase
 import com.example.csscorechallenge.utils.SingleLiveEvent
@@ -21,7 +22,8 @@ class MatchDetailsViewModel constructor(
     sealed class GetMatchDetailsState {
         data class BindData(
             val team: MatchDetailsDomain,
-            val isFirstTeam: Boolean
+            val isFirstTeam: Boolean,
+            val match: HomeMatchesDomain?
         ) : GetMatchDetailsState()
 
         data class Failure(val throwable: Throwable?) : GetMatchDetailsState()
@@ -32,24 +34,25 @@ class MatchDetailsViewModel constructor(
     private val _getMatchDetailsLiveData by lazy { SingleLiveEvent<GetMatchDetailsState>() }
     val getMatchDetailsLiveData: LiveData<GetMatchDetailsState> = _getMatchDetailsLiveData
 
-    fun getTeamDetailsTeam(id: Int, isFirstTeam: Boolean) {
+    fun getTeamDetailsTeam(id: Int, isFirstTeam: Boolean, match: HomeMatchesDomain? = null) {
         _showLoadingLiveData.postValue(true)
         viewModelScope.launch {
             getMatchDetailsUseCase.getMatchDetails(id)
                 .collect { result ->
-                    handleGetMatchDetailsResult(result, isFirstTeam)
+                    handleGetMatchDetailsResult(result, isFirstTeam, match)
                 }
         }
     }
 
     private fun handleGetMatchDetailsResult(
         result: Result<MatchDetailsDomain>,
-        isFirstTeam: Boolean
+        isFirstTeam: Boolean,
+        match: HomeMatchesDomain?
     ) {
         val matchDetails = result.getOrNull()
         if (result.isSuccess && matchDetails != null) {
             _getMatchDetailsLiveData.postValue(
-                GetMatchDetailsState.BindData(matchDetails, isFirstTeam)
+                GetMatchDetailsState.BindData(matchDetails, isFirstTeam, match)
             )
             _showLoadingLiveData.postValue(false)
         } else {

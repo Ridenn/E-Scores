@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.R
@@ -20,8 +21,10 @@ import com.example.csscorechallenge.ui.matchdetails.adapter.MatchFirstTeamPlayer
 import com.example.csscorechallenge.ui.matchdetails.adapter.MatchSecondTeamPlayersAdapter
 import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import com.example.csscorechallenge.utils.FormatDateUtils
+import com.example.csscorechallenge.utils.ToastUtils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.logging.Logger
 
 
 class MatchDetailsFragment : Fragment() {
@@ -51,7 +54,6 @@ class MatchDetailsFragment : Fragment() {
         setUpActionBar(match.league?.name, match.serie?.fullName)
         setUpViewModelObservers()
         fetchData(match)
-        bindMatch(match)
     }
 
     private fun setUpViewModelObservers() {
@@ -68,10 +70,53 @@ class MatchDetailsFragment : Fragment() {
         }
     }
 
-    private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetMatchDetailsState?) {
+    private fun showOrHideLoading(isShow: Boolean) {
+        if (isShow) {
+            binding?.matchDetailsProgressBar?.visible()
+        } else {
+            lifecycleScope.launch {
+                delay(LOADING_DELAY)
+                binding?.matchDetailsProgressBar?.gone()
+                binding?.homeMatchesDetails?.visible()
+            }
+        }
+    }
+
+    private fun fetchData(match: HomeMatchesDomain) {
+        if (match.opponents?.size == 2) {
+            match.opponents.first().opponent?.id?.let { id ->
+                fetchFirstTeamData(id = id, match = match)
+            }
+            match.opponents.last().opponent?.id?.let { id ->
+                fetchSecondTeamData(id = id)
+            }
+        } else if (match.opponents?.size == 1) {
+            match.opponents.first().opponent?.id?.let { id ->
+                fetchFirstTeamData(id = id, match = match)
+            }
+        }
+    }
+
+    private fun fetchFirstTeamData(id: Int, match: HomeMatchesDomain) {
+        matchDetailsViewModel.getTeamDetailsTeam(
+            id = id,
+            isFirstTeam = true,
+            match = match
+        )
+    }
+
+    private fun fetchSecondTeamData(id: Int) {
+        matchDetailsViewModel.getTeamDetailsTeam(
+            id = id,
+            isFirstTeam = false
+        )
+    }
+
+    private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetMatchDetailsState) {
         when (matchDetailsState) {
             is MatchDetailsViewModel.GetMatchDetailsState.BindData -> {
                 if (matchDetailsState.isFirstTeam) {
+                    matchDetailsState.match?.let { bindMatch(it) }
                     bindFirstData(matchDetailsState.team)
                 } else {
                     bindSecondData(matchDetailsState.team)
@@ -79,69 +124,25 @@ class MatchDetailsFragment : Fragment() {
             }
             is MatchDetailsViewModel.GetMatchDetailsState.Failure -> {
                 Log.w("Error", matchDetailsState.throwable)
-                Toast.makeText(requireContext(), getString(R.string.generic_error_label), Toast.LENGTH_LONG).show()
+                showGenericError()
             }
             is MatchDetailsViewModel.GetMatchDetailsState.NetworkError -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.network_error_label),
-                    Toast.LENGTH_LONG
-                ).show()
+                showNetworkError()
             }
             is MatchDetailsViewModel.GetMatchDetailsState.TimeoutError -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.timeout_error_label),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            else -> {}
-        }
-    }
-
-    private fun showOrHideLoading(isShow: Boolean) {
-        if (isShow) {
-            binding?.matchDetailsProgressBar?.visible()
-        } else {
-            binding?.matchDetailsProgressBar?.gone()
-        }
-    }
-
-    private fun fetchData(match: HomeMatchesDomain) {
-        if (match.opponents?.size == 2) {
-            match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id)
-            }
-            match.opponents.last().opponent?.id?.let { id ->
-                fetchSecondTeamData(id = id)
-            }
-        } else if (match.opponents?.size == 1) {
-            match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id)
+                showTimeoutError()
             }
         }
-    }
-
-    private fun fetchFirstTeamData(id: Int) {
-        matchDetailsViewModel.getTeamDetailsTeam(
-            id = id,
-            isFirstTeam = true,
-        )
-    }
-
-    private fun fetchSecondTeamData(id: Int) {
-        matchDetailsViewModel.getTeamDetailsTeam(
-            id = id,
-            isFirstTeam = false,
-        )
     }
 
     private fun setUpActionBar(leagueName: String?, serieName: String?) {
         (activity as AppCompatActivity).supportActionBar?.title = "$leagueName $serieName"
-        (activity as AppCompatActivity).supportActionBar?.setElevation(0F)
     }
 
     private fun bindMatch(match: HomeMatchesDomain) {
+
+        binding?.homeMatchesTeamsVersus?.visible()
+
         binding?.matchDetailsFirstTeam?.bind(
             teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
             teamName = match.opponents?.first()?.opponent?.name
@@ -161,32 +162,78 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun bindFirstData(team: MatchDetailsDomain) {
-        matchFirstTeamPlayersAdapter = team.players?.let { playerList ->
-            MatchFirstTeamPlayersAdapter(playerList)
-        }
+        if (team.players?.size != 0) {
+            matchFirstTeamPlayersAdapter = team.players?.let { playerList ->
+                MatchFirstTeamPlayersAdapter(playerList)
+            }
 
-        binding?.matchDetailsFirstTeamPlayersReciclerView?.apply {
-            val linearLayoutManager = LinearLayoutManager(requireContext())
-            layoutManager = linearLayoutManager
-            setHasFixedSize(true)
-            adapter = matchFirstTeamPlayersAdapter
-            (binding?.matchDetailsFirstTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
-                .supportsChangeAnimations = false
+            binding?.matchDetailsFirstTeamPlayersReciclerView?.apply {
+                val linearLayoutManager = LinearLayoutManager(requireContext())
+                layoutManager = linearLayoutManager
+                setHasFixedSize(true)
+                adapter = matchFirstTeamPlayersAdapter
+                (binding?.matchDetailsFirstTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
+                    .supportsChangeAnimations = false
+            }
+        } else {
+            lifecycleScope.launch {
+                delay(LOADING_DELAY)
+                showTeamPlayerError(team.name)
+            }
         }
     }
 
     private fun bindSecondData(team: MatchDetailsDomain) {
-        matchSecondTeamPlayersAdapter = team.players?.let { playerList ->
-            MatchSecondTeamPlayersAdapter(playerList)
-        }
+        if (team.players?.size != 0) {
+            matchSecondTeamPlayersAdapter = team.players?.let { playerList ->
+                MatchSecondTeamPlayersAdapter(playerList)
+            }
 
-        binding?.matchDetailsSecondTeamPlayersReciclerView?.apply {
-            val linearLayoutManager = LinearLayoutManager(requireContext())
-            layoutManager = linearLayoutManager
-            setHasFixedSize(true)
-            adapter = matchSecondTeamPlayersAdapter
-            (binding?.matchDetailsSecondTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
-                .supportsChangeAnimations = false
+            binding?.matchDetailsSecondTeamPlayersReciclerView?.apply {
+                val linearLayoutManager = LinearLayoutManager(requireContext())
+                layoutManager = linearLayoutManager
+                setHasFixedSize(true)
+                adapter = matchSecondTeamPlayersAdapter
+                (binding?.matchDetailsSecondTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
+                    .supportsChangeAnimations = false
+            }
+        } else {
+            lifecycleScope.launch {
+                delay(1000)
+                showTeamPlayerError(team.name)
+            }
         }
+    }
+
+    private fun showTeamPlayerError(teamName: String?) {
+        ToastUtils.showToastMessage(
+            getString(R.string.match_details_players_error_label) + teamName,
+            requireContext()
+        )
+    }
+
+    private fun showGenericError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.generic_error_label),
+            requireContext()
+        )
+    }
+
+    private fun showTimeoutError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.timeout_error_label),
+            requireContext()
+        )
+    }
+
+    private fun showNetworkError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.network_error_label),
+            requireContext()
+        )
+    }
+
+    companion object {
+        private const val LOADING_DELAY = 1000L
     }
 }

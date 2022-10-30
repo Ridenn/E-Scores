@@ -5,6 +5,7 @@ import com.example.csscorechallenge.extensions.toDate
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("SimpleDateFormat")
 object FormatDateUtils {
 
     private const val DEFAULT_PATTERN_SIMPLE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
@@ -38,7 +39,7 @@ object FormatDateUtils {
         return time
     }
 
-    @SuppressLint("SimpleDateFormat")
+
     private fun getDaysBetweenDates(currentDate: String, futureDate: String): Int {
         val format = SimpleDateFormat(SIMPLE_DATE_FORMAT)
         val milliDifference =

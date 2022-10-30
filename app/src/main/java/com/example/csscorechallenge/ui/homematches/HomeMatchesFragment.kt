@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -19,6 +19,9 @@ import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.utils.EndlessRecyclerOnScrollListener
+import com.example.csscorechallenge.utils.ToastUtils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -92,7 +95,7 @@ class HomeMatchesFragment : Fragment(),
         }
     }
 
-    private fun handleRunningGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetRunningHomeMatchesState?) {
+    private fun handleRunningGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetRunningHomeMatchesState) {
         when (homeMatchesState) {
             is HomeMatchesViewModel.GetRunningHomeMatchesState.BindData -> {
                 homeMatchesViewModel.getHomeMatches(
@@ -101,11 +104,10 @@ class HomeMatchesFragment : Fragment(),
                     homeMatchesState.matchList
                 )
             }
-            else -> {}
         }
     }
 
-    private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState?) {
+    private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState) {
         when (homeMatchesState) {
             is HomeMatchesViewModel.GetHomeMatchesState.BindData -> {
                 bindData(homeMatchesState.matchList)
@@ -115,27 +117,14 @@ class HomeMatchesFragment : Fragment(),
             }
             is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
                 Log.w("Error", homeMatchesState.throwable)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.generic_error_label),
-                    Toast.LENGTH_LONG
-                ).show()
+                showGenericError()
             }
             is HomeMatchesViewModel.GetHomeMatchesState.NetworkError -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.network_error_label),
-                    Toast.LENGTH_LONG
-                ).show()
+                showNetworkError()
             }
             is HomeMatchesViewModel.GetHomeMatchesState.TimeoutError -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.timeout_error_label),
-                    Toast.LENGTH_LONG
-                ).show()
+                showTimeoutError()
             }
-            else -> {}
         }
     }
 
@@ -166,7 +155,10 @@ class HomeMatchesFragment : Fragment(),
             binding?.homeMatchesProgressBar?.visible()
             binding?.homeMatchesSwipeRefresh?.isRefreshing = false
         } else {
-            binding?.homeMatchesProgressBar?.gone()
+            lifecycleScope.launch {
+                delay(LOADING_DELAY)
+                binding?.homeMatchesProgressBar?.gone()
+            }
         }
     }
 
@@ -174,7 +166,29 @@ class HomeMatchesFragment : Fragment(),
         homeMatchesViewModel.getRunningHomeMatches(page, appendData)
     }
 
+    private fun showGenericError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.generic_error_label),
+            requireContext()
+        )
+    }
+
+    private fun showTimeoutError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.timeout_error_label),
+            requireContext()
+        )
+    }
+
+    private fun showNetworkError() {
+        ToastUtils.showToastMessage(
+            getString(R.string.network_error_label),
+            requireContext()
+        )
+    }
+
     companion object {
         private const val INITIAL_PAGE = 1
+        private const val LOADING_DELAY = 1000L
     }
 }

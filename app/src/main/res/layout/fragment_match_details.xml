@@ -13,8 +13,11 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeMatchesDetails"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/homeMatchesTeamsVersus"
@@ -22,9 +25,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="24dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
 
                 <com.example.csscorechallenge.ui.common.TeamPresentationView
                     android:id="@+id/matchDetailsFirstTeam"
@@ -38,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:text="VS"
+                    android:text="@string/matches_versus_label"
                     android:textColor="@color/font_80"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +81,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/matchDetailsLeftGuideLine"
                 app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
                 tools:itemCount="5"
-                tools:listitem="@layout/item_team_player_left" />
+                tools:listitem="@layout/item_team_player_left"
+                tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/matchDetailsSecondTeamPlayersReciclerView"
@@ -87,7 +93,8 @@
                 app:layout_constraintStart_toStartOf="@+id/matchDetailsRightGuideLine"
                 app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
                 tools:itemCount="5"
-                tools:listitem="@layout/item_team_player_right" />
+                tools:listitem="@layout/item_team_player_right"
+                tools:visibility="visible" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/matchDetailsLeftGuideLine"
