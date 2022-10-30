@@ -54,6 +54,7 @@ class MatchDetailsFragment : Fragment() {
         setUpActionBar(match.league?.name, match.serie?.fullName)
         setUpViewModelObservers()
         fetchData(match)
+        bindMatch(match)
     }
 
     private fun setUpViewModelObservers() {
@@ -78,6 +79,7 @@ class MatchDetailsFragment : Fragment() {
                 delay(LOADING_DELAY)
                 binding?.matchDetailsProgressBar?.gone()
                 binding?.homeMatchesDetails?.visible()
+                binding?.homeMatchesTeamsVersus?.visible()
             }
         }
     }
@@ -116,7 +118,7 @@ class MatchDetailsFragment : Fragment() {
         when (matchDetailsState) {
             is MatchDetailsViewModel.GetMatchDetailsState.BindData -> {
                 if (matchDetailsState.isFirstTeam) {
-                    matchDetailsState.match?.let { bindMatch(it) }
+//                    matchDetailsState.match?.let { bindMatch(it) }
                     bindFirstData(matchDetailsState.team)
                 } else {
                     bindSecondData(matchDetailsState.team)
@@ -140,8 +142,6 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun bindMatch(match: HomeMatchesDomain) {
-
-        binding?.homeMatchesTeamsVersus?.visible()
 
         binding?.matchDetailsFirstTeam?.bind(
             teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
@@ -199,7 +199,7 @@ class MatchDetailsFragment : Fragment() {
             }
         } else {
             lifecycleScope.launch {
-                delay(1000)
+                delay(LOADING_DELAY)
                 showTeamPlayerError(team.name)
             }
         }

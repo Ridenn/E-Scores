@@ -55,7 +55,8 @@ class HomeMatchesViewModelTest {
     @Test
     fun `should get home matches data then returns loading state equal true`() =
         runTest {
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            val page = Random.nextInt()
+            viewModel.getHomeMatches(page = page, appendData = false)
             Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
         }
 
@@ -63,15 +64,17 @@ class HomeMatchesViewModelTest {
     fun `should get keep section data then returns loading state equal false`() =
         runTest {
 
+            val id = Random.nextInt()
+            val page = Random.nextInt()
             val mockedResponse = mutableListOf(
-                HomeMatchesDomain(id = Random.nextInt())
+                HomeMatchesDomain(id = id)
             )
 
             whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            viewModel.getHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
@@ -81,15 +84,17 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns bind data with valid list`() =
         runTest {
 
+            val id = Random.nextInt()
+            val page = Random.nextInt()
             val mockedResponse = mutableListOf(
-                HomeMatchesDomain(id = Random.nextInt())
+                HomeMatchesDomain(id = id)
             )
 
             whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            viewModel.getHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -102,6 +107,7 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns append data with valid list`() =
         runTest {
 
+            val page = Random.nextInt() + 1
             val mockedResponse = mutableListOf(
                 HomeMatchesDomain(id = Random.nextInt())
             )
@@ -110,7 +116,7 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = 2, appendData = true)
+            viewModel.getHomeMatches(page = page, appendData = true)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -123,13 +129,14 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns failure error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = Exception()
 
             whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            viewModel.getHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -143,13 +150,14 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns network error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = UnknownHostException()
 
             whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            viewModel.getHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -163,13 +171,14 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns timeout error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = SocketTimeoutException()
 
             whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = 1, appendData = false)
+            viewModel.getHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -183,19 +192,21 @@ class HomeMatchesViewModelTest {
     fun `should get running matches data then returns bind data with valid list`() =
         runTest {
 
+            val id = Random.nextInt()
+            val page = Random.nextInt()
             val mockedResponse = mutableListOf(
-                HomeMatchesDomain(id = Random.nextInt())
+                HomeMatchesDomain(id = id)
             )
 
             whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            viewModel.getRunningHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
-                HomeMatchesViewModel.GetRunningHomeMatchesState.BindData(mockedResponse, 1, false),
+                HomeMatchesViewModel.GetRunningHomeMatchesState.BindData(mockedResponse, page, false),
                 viewModel.getRunningHomeMatchesLiveData.value
             )
         }
@@ -204,13 +215,14 @@ class HomeMatchesViewModelTest {
     fun `should get running matches data then returns failure error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = Exception()
 
             whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            viewModel.getRunningHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -223,13 +235,14 @@ class HomeMatchesViewModelTest {
     fun `should get running matches data then returns network error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = UnknownHostException()
 
             whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            viewModel.getRunningHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -242,13 +255,14 @@ class HomeMatchesViewModelTest {
     fun `should get running matches data then returns timeout error data state`() =
         runTest {
 
+            val page = Random.nextInt()
             val mockedThrowable = SocketTimeoutException()
 
             whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            viewModel.getRunningHomeMatches(page = page, appendData = false)
             advanceUntilIdle()
 
             Assert.assertEquals(

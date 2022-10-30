@@ -133,6 +133,12 @@ class HomeMatchesFragment : Fragment(),
     ) {
         val mutableMatchList = matchList.toMutableList()
 
+        matchList.forEach { match ->
+            if (match.opponents?.size == 0) {
+                mutableMatchList.remove(match)
+            }
+        }
+
         homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
         binding?.homeMatchesRecyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(requireContext())
@@ -158,6 +164,7 @@ class HomeMatchesFragment : Fragment(),
             lifecycleScope.launch {
                 delay(LOADING_DELAY)
                 binding?.homeMatchesProgressBar?.gone()
+                binding?.homeMatchesRecyclerView?.visible()
             }
         }
     }
@@ -189,6 +196,6 @@ class HomeMatchesFragment : Fragment(),
 
     companion object {
         private const val INITIAL_PAGE = 1
-        private const val LOADING_DELAY = 1000L
+        private const val LOADING_DELAY = 250L
     }
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.usecase.GetHomeMatchesUseCase
-import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import com.example.csscorechallenge.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -41,7 +40,9 @@ class HomeMatchesViewModel constructor(
         appendData: Boolean = true,
         matchList: List<HomeMatchesDomain>? = null
     ) {
-        _showLoadingLiveData.postValue(true)
+        if (!appendData) {
+            _showLoadingLiveData.postValue(true)
+        }
         currentPage = if (page == INITIAL_PAGE) {
             INITIAL_PAGE
         } else {
@@ -125,7 +126,9 @@ class HomeMatchesViewModel constructor(
         _getRunningHomeMatchesLiveData
 
     fun getRunningHomeMatches(page: Int, appendData: Boolean) {
-        _showLoadingLiveData.postValue(true)
+        if (!appendData) {
+            _showLoadingLiveData.postValue(true)
+        }
         viewModelScope.launch {
             getHomeMatchesUseCase.getRunningHomeMatches()
                 .collect { result ->

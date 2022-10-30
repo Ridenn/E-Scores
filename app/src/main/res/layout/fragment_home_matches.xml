@@ -40,9 +40,11 @@
             android:id="@+id/homeMatchesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_match_received"
-            tools:itemCount="10" />
+            tools:itemCount="10"
+            tools:visibility="visible"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
