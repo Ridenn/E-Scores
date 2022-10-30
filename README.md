@@ -1,5 +1,9 @@
 # CSScores
 
+<p align="center">
+    <img src="docs/app_demo.png" height="600">
+</p>
+
 ## What is it?
 
 > CS Scores is an Android app to follow Counter Strike matches and live scores based on [PandaScore](https://pandascore.co/) API.
@@ -50,6 +54,9 @@
 - Koin
 - Retrofit
 - Glide
+- Gson
+- Robolectric
+- Mockito
 
 ---
 
