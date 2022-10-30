@@ -20,6 +20,12 @@ import org.koin.core.context.stopKoin
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
+import retrofit2.HttpException
+import retrofit2.Response
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
@@ -47,25 +53,208 @@ class HomeMatchesViewModelTest {
     }
 
     @Test
-    fun `should get home matches data then returns bind data with valid list`() =
+    fun `should get home matches data then returns loading state equal true`() =
         runTest {
+            viewModel.getHomeMatches(page = 1, appendData = false)
+            Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get keep section data then returns loading state equal false`() =
+        runTest {
+
             val mockedResponse = mutableListOf(
                 HomeMatchesDomain(id = Random.nextInt())
             )
 
-            `when`(getHomeMatchesUseCase.getHomeMatches(1)).thenReturn(
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
                 flowOf(Result.success(mockedResponse))
             )
 
             viewModel.getHomeMatches(page = 1, appendData = false)
             advanceUntilIdle()
 
-//            val value = LiveDataTestUtil.getValue(viewModel.getHomeMatchesLiveData)
-            val value = viewModel.getHomeMatchesLiveData.value
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get home matches data then returns bind data with valid list`() =
+        runTest {
+
+            val mockedResponse = mutableListOf(
+                HomeMatchesDomain(id = Random.nextInt())
+            )
+
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
+                flowOf(Result.success(mockedResponse))
+            )
+
+            viewModel.getHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
 
             Assert.assertEquals(
                 HomeMatchesViewModel.GetHomeMatchesState.BindData(mockedResponse),
-                value
+                viewModel.getHomeMatchesLiveData.value
             )
         }
+
+    @Test
+    fun `should get home matches data then returns append data with valid list`() =
+        runTest {
+
+            val mockedResponse = mutableListOf(
+                HomeMatchesDomain(id = Random.nextInt())
+            )
+
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
+                flowOf(Result.success(mockedResponse))
+            )
+
+            viewModel.getHomeMatches(page = 2, appendData = true)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.AppendData(mockedResponse),
+                viewModel.getHomeMatchesLiveData.value
+            )
+        }
+
+    @Test
+    fun `should get home matches data then returns failure error data state`() =
+        runTest {
+
+            val mockedThrowable = Exception()
+
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.Failure(mockedThrowable),
+                viewModel.getHomeMatchesLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get home matches data then returns network error data state`() =
+        runTest {
+
+            val mockedThrowable = UnknownHostException()
+
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.NetworkError,
+                viewModel.getHomeMatchesLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get home matches data then returns timeout error data state`() =
+        runTest {
+
+            val mockedThrowable = SocketTimeoutException()
+
+            whenever(getHomeMatchesUseCase.getHomeMatches(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.TimeoutError,
+                viewModel.getHomeMatchesLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get running matches data then returns bind data with valid list`() =
+        runTest {
+
+            val mockedResponse = mutableListOf(
+                HomeMatchesDomain(id = Random.nextInt())
+            )
+
+            whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
+                flowOf(Result.success(mockedResponse))
+            )
+
+            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetRunningHomeMatchesState.BindData(mockedResponse, 1, false),
+                viewModel.getRunningHomeMatchesLiveData.value
+            )
+        }
+
+    @Test
+    fun `should get running matches data then returns failure error data state`() =
+        runTest {
+
+            val mockedThrowable = Exception()
+
+            whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.Failure(mockedThrowable),
+                viewModel.getHomeMatchesLiveData.value
+            )
+        }
+
+    @Test
+    fun `should get running matches data then returns network error data state`() =
+        runTest {
+
+            val mockedThrowable = UnknownHostException()
+
+            whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.NetworkError,
+                viewModel.getHomeMatchesLiveData.value
+            )
+        }
+
+    @Test
+    fun `should get running matches data then returns timeout error data state`() =
+        runTest {
+
+            val mockedThrowable = SocketTimeoutException()
+
+            whenever(getHomeMatchesUseCase.getRunningHomeMatches()).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getRunningHomeMatches(page = 1, appendData = false)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                HomeMatchesViewModel.GetHomeMatchesState.TimeoutError,
+                viewModel.getHomeMatchesLiveData.value
+            )
+        }
+
 }

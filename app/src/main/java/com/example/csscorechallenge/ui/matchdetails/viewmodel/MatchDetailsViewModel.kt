@@ -34,7 +34,7 @@ class MatchDetailsViewModel constructor(
     private val _getMatchDetailsLiveData by lazy { SingleLiveEvent<GetMatchDetailsState>() }
     val getMatchDetailsLiveData: LiveData<GetMatchDetailsState> = _getMatchDetailsLiveData
 
-    fun getTeamDetailsTeam(id: Int, isFirstTeam: Boolean, match: HomeMatchesDomain? = null) {
+    fun getTeamDetails(id: Int, isFirstTeam: Boolean, match: HomeMatchesDomain? = null) {
         _showLoadingLiveData.postValue(true)
         viewModelScope.launch {
             getMatchDetailsUseCase.getMatchDetails(id)

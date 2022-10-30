@@ -98,7 +98,7 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun fetchFirstTeamData(id: Int, match: HomeMatchesDomain) {
-        matchDetailsViewModel.getTeamDetailsTeam(
+        matchDetailsViewModel.getTeamDetails(
             id = id,
             isFirstTeam = true,
             match = match
@@ -106,7 +106,7 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun fetchSecondTeamData(id: Int) {
-        matchDetailsViewModel.getTeamDetailsTeam(
+        matchDetailsViewModel.getTeamDetails(
             id = id,
             isFirstTeam = false
         )
