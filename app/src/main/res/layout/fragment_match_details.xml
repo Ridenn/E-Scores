@@ -71,10 +71,9 @@
                 android:id="@+id/matchDetailsFirstTeamPlayersReciclerView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-10dp"
                 android:layout_marginTop="24dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/matchDetailsLeftGuideLine"
                 app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_team_player_left" />
@@ -84,20 +83,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="-10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/matchDetailsRightGuideLine"
                 app:layout_constraintTop_toBottomOf="@+id/matchDetailsDateLabel"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_team_player_right" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/matchDetailsGuideLine"
+                android:id="@+id/matchDetailsLeftGuideLine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.45" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/matchDetailsRightGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.55" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -106,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/white"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
