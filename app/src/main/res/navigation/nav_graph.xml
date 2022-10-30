@@ -14,6 +14,7 @@
             android:id="@+id/to_homeMatches"
             app:destination="@id/matchesFragment"
             app:launchSingleTop="true"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -24,7 +25,9 @@
 
         <action
             android:id="@+id/to_matchDetails"
-            app:destination="@id/matchDetailsFragment" />
+            app:destination="@id/matchDetailsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:popUpTo="@id/matchesFragment" />
     </fragment>
     <fragment
         android:id="@+id/matchDetailsFragment"
@@ -38,6 +41,7 @@
 
         <action
             android:id="@+id/action_matchDetailsFragment_to_matchesFragment"
-            app:destination="@id/matchesFragment" />
+            app:destination="@id/matchesFragment"
+            app:popUpTo="@id/matchDetailsFragment" />
     </fragment>
 </navigation>

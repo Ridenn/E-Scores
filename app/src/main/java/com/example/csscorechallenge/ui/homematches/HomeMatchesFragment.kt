@@ -127,7 +127,7 @@ class HomeMatchesFragment : Fragment(),
     ) {
         val mutableMatchList = matchList.toMutableList()
 
-        homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this, requireContext())
+        homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
         binding?.homeMatchesRecyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             layoutManager = linearLayoutManager

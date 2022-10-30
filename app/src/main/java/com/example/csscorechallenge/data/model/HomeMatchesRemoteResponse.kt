@@ -29,11 +29,7 @@ data class HomeMatchesRemoteResponse(
     @SerializedName("opponents")
     val opponents: List<OpponentsRemoteResponse>?
 
-) : Parcelable {
-    companion object{
-        const val EXTRA_KEY = "current_match"
-    }
-}
+) : Parcelable
 
 fun HomeMatchesRemoteResponse.toDomain(): HomeMatchesDomain =
     HomeMatchesDomain(

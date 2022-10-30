@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/homeMatchesTime"
+            android:id="@+id/itemTeamPlayerLeftIdBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_team_player_left_rounded"
@@ -26,16 +26,36 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/itemTeamPlayerImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/itemTeamPlayerLeftImageCardView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardCornerRadius="8dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="9dp"
-            android:background="@drawable/bg_team_player_image_rounded"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/homeMatchesTime"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/itemTeamPlayerLeftIdBox"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/itemTeamPlayerLeftImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:background="@color/font_light_grey"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+
+<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--            android:id="@+id/itemTeamPlayerLeftImage"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="12dp"-->
+<!--            android:layout_marginBottom="9dp"-->
+<!--            android:background="@drawable/bg_team_player_image_rounded"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/itemTeamPlayerLeftIdBox"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
@@ -44,11 +64,11 @@
             android:gravity="end"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/itemTeamPlayerImage"
-            app:layout_constraintTop_toTopOf="@id/homeMatchesTime">
+            app:layout_constraintEnd_toStartOf="@+id/itemTeamPlayerLeftImageCardView"
+            app:layout_constraintTop_toTopOf="@id/itemTeamPlayerLeftIdBox">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/itemTeamPlayerNickname"
+                android:id="@+id/itemTeamPlayerLeftNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nickname"
@@ -56,6 +76,7 @@
                 android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemTeamPlayerLeftName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nome jogador"

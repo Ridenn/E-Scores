@@ -30,6 +30,7 @@ class TeamPresentationView @JvmOverloads constructor(
         coverImageUrl?.let { validUrl ->
             Glide.with(binding.viewTeamPresentedTeamImageView.context)
                 .load(Uri.parse(validUrl.trim()))
+                .placeholder(R.drawable.ic_team_placeholder)
                 .error(R.drawable.ic_team_placeholder)
                 .into(binding.viewTeamPresentedTeamImageView)
         } ?: run {

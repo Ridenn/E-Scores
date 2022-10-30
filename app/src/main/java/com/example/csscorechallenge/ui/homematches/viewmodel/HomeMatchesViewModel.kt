@@ -32,21 +32,6 @@ class HomeMatchesViewModel constructor(
     private val _getHomeMatchesLiveData by lazy { SingleLiveEvent<GetHomeMatchesState>() }
     val getHomeMatchesLiveData: LiveData<GetHomeMatchesState> = _getHomeMatchesLiveData
 
-//    fun getHomeMatches(page: Int, appendData: Boolean = true) {
-//        _showLoadingLiveData.postValue(true)
-//        currentPage = if (page == INITIAL_PAGE) {
-//            INITIAL_PAGE
-//        } else {
-//            page
-//        }
-//        viewModelScope.launch {
-//            getHomeMatchesUseCase.getHomeMatches(currentPage)
-//                .collect { result ->
-//                    handleGetHomeMatchesResult(result, appendData)
-//                }
-//        }
-//    }
-
     fun getHomeMatches(page: Int, appendData: Boolean = true, matchList: List<HomeMatchesDomain>? = null) {
         _showLoadingLiveData.postValue(true)
         currentPage = if (page == INITIAL_PAGE) {
@@ -61,38 +46,6 @@ class HomeMatchesViewModel constructor(
                 }
         }
     }
-
-//    private fun handleGetHomeMatchesResult(
-//        result: Result<List<HomeMatchesDomain>>,
-//        appendData: Boolean
-//    ) {
-//        val homeMatches = result.getOrNull()
-//        if (result.isSuccess && homeMatches != null) {
-//            if (appendData) {
-//                _getHomeMatchesLiveData.postValue(
-//                    GetHomeMatchesState.AppendData(homeMatches)
-//                )
-//            } else {
-//                _getHomeMatchesLiveData.postValue(
-//                    GetHomeMatchesState.BindData(homeMatches)
-//                )
-//            }
-//            _showLoadingLiveData.postValue(false)
-//        } else {
-//            _showLoadingLiveData.postValue(false)
-//            result.exceptionOrNull()?.let { throwable ->
-//                if (throwable is UnknownHostException) {
-//                    _getHomeMatchesLiveData.postValue(
-//                        GetHomeMatchesState.NetworkError
-//                    )
-//                } else {
-//                    _getHomeMatchesLiveData.postValue(
-//                        GetHomeMatchesState.Failure(result.exceptionOrNull())
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     private fun handleGetHomeMatchesResult(
         result: Result<List<HomeMatchesDomain>>,

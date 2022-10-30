@@ -1,6 +1,5 @@
 package com.example.csscorechallenge.ui.homematches.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +18,7 @@ import com.example.csscorechallenge.utils.MatchStatusUtils
 
 class HomeMatchesAdapter(
     private val matchList: MutableList<HomeMatchesDomain>,
-    private val listener: HomeMatchesAdapterListClickListener,
-    context: Context
+    private val listener: HomeMatchesAdapterListClickListener
 ) : RecyclerView.Adapter<HomeMatchesAdapter.HomeMatchesAdapterViewHolder>() {
 
     interface HomeMatchesAdapterListClickListener {
@@ -83,13 +81,19 @@ class HomeMatchesAdapter(
         fun bind(match: HomeMatchesDomain) {
 
             homeMatchesTimeView.apply {
-                when(match.status?.let { MatchStatusUtils.getMatchStatus(it) }) {
+                when (match.status?.let { MatchStatusUtils.getMatchStatus(it) }) {
                     is MatchStatusUtils.MatchStatus.RUNNING -> {
-                        background = AppCompatResources.getDrawable(context, R.drawable.bg_match_time_now_rounded)
+                        background = AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.bg_match_time_now_rounded
+                        )
                         homeMatchesDateView.text = "AGORA"
                     }
                     else -> {
-                        background = AppCompatResources.getDrawable(context, R.drawable.bg_match_time_rounded)
+                        background = AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.bg_match_time_rounded
+                        )
                         homeMatchesDateView.apply {
                             text = match.beginAt?.let {
                                 FormatDateUtils.convertToReaderReadableDate(it)
@@ -99,19 +103,19 @@ class HomeMatchesAdapter(
                 }
             }
 
-
-
             firstTeamView.apply {
                 bind(
                     teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
-                    teamName = match.opponents?.first()?.opponent?.name ?: resources.getString(R.string.matches_tba_label)
+                    teamName = match.opponents?.first()?.opponent?.name
+                        ?: resources.getString(R.string.matches_tba_label)
                 )
             }
 
             secondTeamView.apply {
                 bind(
                     teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
-                    teamName = match.opponents?.last()?.opponent?.name ?: resources.getString(R.string.matches_tba_label)
+                    teamName = match.opponents?.last()?.opponent?.name
+                        ?: resources.getString(R.string.matches_tba_label)
                 )
             }
 

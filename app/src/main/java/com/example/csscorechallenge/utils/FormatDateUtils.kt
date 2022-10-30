@@ -7,7 +7,6 @@ import java.util.*
 
 object FormatDateUtils {
 
-    private const val DEFAULT_PATTERN_SIMPLE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
     private const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"
     private const val HOUR_MINUTE_FORMAT = "HH:mm"
     private const val CALENDAR_FORMAT = "dd.MM HH:mm"
