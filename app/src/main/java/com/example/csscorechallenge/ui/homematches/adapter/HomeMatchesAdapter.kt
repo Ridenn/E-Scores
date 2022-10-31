@@ -39,7 +39,10 @@ class HomeMatchesAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeMatchesAdapterViewHolder, position: Int) {
-        if (matchList[position].opponents?.size == 2) {
+//        if (matchList[position].opponents?.size == 2) {
+//            holder.bind(matchList[position])
+//        }
+        if (matchList[position].opponents?.size!! >= 1) {
             holder.bind(matchList[position])
         }
     }
@@ -112,11 +115,18 @@ class HomeMatchesAdapter(
             }
 
             secondTeamView.apply {
-                bind(
-                    teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
-                    teamName = match.opponents?.last()?.opponent?.name
-                        ?: resources.getString(R.string.matches_tba_label)
-                )
+                if (match.opponents?.first() != match.opponents?.last()) {
+                    bind(
+                        teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
+                        teamName = match.opponents?.last()?.opponent?.name
+                            ?: resources.getString(R.string.matches_tba_label)
+                    )
+                } else {
+                    bind(
+                        teamImageCover = "",
+                        teamName = resources.getString(R.string.matches_tba_label)
+                    )
+                }
             }
 
             leagueSeriesView.apply {

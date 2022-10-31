@@ -149,11 +149,18 @@ class MatchDetailsFragment : Fragment() {
                 ?: resources.getString(R.string.matches_tba_label)
         )
 
-        binding?.matchDetailsSecondTeam?.bind(
-            teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
-            teamName = match.opponents?.last()?.opponent?.name
-                ?: resources.getString(R.string.matches_tba_label)
-        )
+        if (match.opponents?.first() != match.opponents?.last()) {
+            binding?.matchDetailsSecondTeam?.bind(
+                teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
+                teamName = match.opponents?.last()?.opponent?.name
+                    ?: resources.getString(R.string.matches_tba_label)
+            )
+        } else {
+            binding?.matchDetailsSecondTeam?.bind(
+                teamImageCover = "",
+                teamName = resources.getString(R.string.matches_tba_label)
+            )
+        }
 
         binding?.matchDetailsDateLabel?.text =
             match.beginAt?.let {

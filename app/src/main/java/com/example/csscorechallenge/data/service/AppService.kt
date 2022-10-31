@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface AppService {
 
-    @GET("csgo/matches/upcoming")
+    @GET("csgo/matches/upcoming?sort=begin_at")
     suspend fun getHomeMatches(
         @Query(value = "page[number]") page: Int,
         @Query(value = "page[size]") limit: Int
