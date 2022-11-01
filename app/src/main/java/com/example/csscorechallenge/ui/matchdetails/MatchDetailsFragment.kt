@@ -26,7 +26,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class MatchDetailsFragment : Fragment() {
 
     private val matchDetailsViewModel: MatchDetailsViewModel by viewModel()
@@ -118,7 +117,6 @@ class MatchDetailsFragment : Fragment() {
         when (matchDetailsState) {
             is MatchDetailsViewModel.GetMatchDetailsState.BindData -> {
                 if (matchDetailsState.isFirstTeam) {
-//                    matchDetailsState.match?.let { bindMatch(it) }
                     bindFirstData(matchDetailsState.team)
                 } else {
                     bindSecondData(matchDetailsState.team)
@@ -143,24 +141,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindMatch(match: HomeMatchesDomain) {
 
-        binding?.matchDetailsFirstTeam?.bind(
-            teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
-            teamName = match.opponents?.first()?.opponent?.name
-                ?: resources.getString(R.string.matches_tba_label)
-        )
-
-        if (match.opponents?.first() != match.opponents?.last()) {
-            binding?.matchDetailsSecondTeam?.bind(
-                teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
-                teamName = match.opponents?.last()?.opponent?.name
-                    ?: resources.getString(R.string.matches_tba_label)
-            )
-        } else {
-            binding?.matchDetailsSecondTeam?.bind(
-                teamImageCover = "",
-                teamName = resources.getString(R.string.matches_tba_label)
-            )
-        }
+        binding?.matchDetailsTeamOpponents?.bind(match)
 
         binding?.matchDetailsDateLabel?.text =
             match.beginAt?.let {

@@ -12,6 +12,7 @@ import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ItemMatchReceivedBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.ui.common.LeagueSeriesView
+import com.example.csscorechallenge.ui.common.TeamOpponentsView
 import com.example.csscorechallenge.ui.common.TeamPresentationView
 import com.example.csscorechallenge.utils.FormatDateUtils
 import com.example.csscorechallenge.utils.MatchStatusUtils
@@ -39,9 +40,6 @@ class HomeMatchesAdapter(
     }
 
     override fun onBindViewHolder(holder: HomeMatchesAdapterViewHolder, position: Int) {
-//        if (matchList[position].opponents?.size == 2) {
-//            holder.bind(matchList[position])
-//        }
         if (matchList[position].opponents?.size!! >= 1) {
             holder.bind(matchList[position])
         }
@@ -69,11 +67,8 @@ class HomeMatchesAdapter(
         private val homeMatchesDateView: TextView =
             view.findViewById(R.id.homeMatchesDateTextView)
 
-        private val firstTeamView: TeamPresentationView =
-            view.findViewById(R.id.homeMatchesFirstTeam)
-
-        private val secondTeamView: TeamPresentationView =
-            view.findViewById(R.id.homeMatchesSecondTeam)
+        private val homeMatchesTeamOpponentsView: TeamOpponentsView =
+            view.findViewById(R.id.homeMatchesTeamOpponents)
 
         private val leagueSeriesView: LeagueSeriesView =
             view.findViewById(R.id.homeMatchesLeagueSeries)
@@ -106,28 +101,7 @@ class HomeMatchesAdapter(
                 }
             }
 
-            firstTeamView.apply {
-                bind(
-                    teamImageCover = match.opponents?.first()?.opponent?.imageUrl ?: "",
-                    teamName = match.opponents?.first()?.opponent?.name
-                        ?: resources.getString(R.string.matches_tba_label)
-                )
-            }
-
-            secondTeamView.apply {
-                if (match.opponents?.first() != match.opponents?.last()) {
-                    bind(
-                        teamImageCover = match.opponents?.last()?.opponent?.imageUrl ?: "",
-                        teamName = match.opponents?.last()?.opponent?.name
-                            ?: resources.getString(R.string.matches_tba_label)
-                    )
-                } else {
-                    bind(
-                        teamImageCover = "",
-                        teamName = resources.getString(R.string.matches_tba_label)
-                    )
-                }
-            }
+            homeMatchesTeamOpponentsView.bind(match)
 
             leagueSeriesView.apply {
                 bind(

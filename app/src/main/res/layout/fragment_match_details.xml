@@ -23,7 +23,6 @@
                 android:id="@+id/homeMatchesTeamsVersus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="24dp"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -31,31 +30,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible">
 
-                <com.example.csscorechallenge.ui.common.TeamPresentationView
-                    android:id="@+id/matchDetailsFirstTeam"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/matchDetailsVersusLabel"
+                <com.example.csscorechallenge.ui.common.TeamOpponentsView
+                    android:id="@+id/matchDetailsTeamOpponents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="@string/matches_versus_label"
-                    android:textColor="@color/font_80"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/matchDetailsSecondTeam"
-                    app:layout_constraintStart_toEndOf="@+id/matchDetailsFirstTeam"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.example.csscorechallenge.ui.common.TeamPresentationView
-                    android:id="@+id/matchDetailsSecondTeam"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
