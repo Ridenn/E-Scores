@@ -45,14 +45,27 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <com.example.csscorechallenge.ui.common.TeamOpponentsView
-                android:id="@+id/homeMatchesTeamOpponents"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/dsdsd"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_marginTop="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/homeMatchesTime" />
+                app:layout_constraintTop_toBottomOf="@+id/homeMatchesTime">
+
+                <com.example.csscorechallenge.ui.common.TeamOpponentsView
+                    android:id="@+id/homeMatchesTeamOpponents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
             <View
                 android:id="@+id/homeMatchesBottomDividerView"
@@ -60,7 +73,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="18dp"
                 android:background="@color/font_grey"
-                app:layout_constraintTop_toBottomOf="@+id/homeMatchesTeamOpponents"
+                app:layout_constraintTop_toBottomOf="@+id/dsdsd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
