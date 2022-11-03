@@ -1,6 +1,5 @@
 package com.example.csscorechallenge.ui.matchdetails.adapter
 
-import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View

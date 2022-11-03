@@ -1,10 +1,8 @@
 package com.example.csscorechallenge.ui.matchdetails.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
 import com.example.csscorechallenge.domain.usecase.GetMatchDetailsUseCase
 import com.example.csscorechallenge.utils.SingleLiveEvent
