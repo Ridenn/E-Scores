@@ -1,5 +1,6 @@
 package com.example.csscorechallenge.ui.matchdetails.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +23,7 @@ class MatchDetailsViewModel constructor(
     sealed class GetMatchDetailsState {
         data class BindData(
             val team: MatchDetailsDomain,
-            val isFirstTeam: Boolean,
-            val match: HomeMatchesDomain?
+            val isFirstTeam: Boolean
         ) : GetMatchDetailsState()
 
         data class Failure(val throwable: Throwable?) : GetMatchDetailsState()
@@ -34,25 +34,24 @@ class MatchDetailsViewModel constructor(
     private val _getMatchDetailsLiveData by lazy { SingleLiveEvent<GetMatchDetailsState>() }
     val getMatchDetailsLiveData: LiveData<GetMatchDetailsState> = _getMatchDetailsLiveData
 
-    fun getTeamDetails(id: Int, isFirstTeam: Boolean, match: HomeMatchesDomain? = null) {
+    fun getTeamDetails(id: Int, isFirstTeam: Boolean) {
         _showLoadingLiveData.postValue(true)
         viewModelScope.launch {
             getMatchDetailsUseCase.getMatchDetails(id)
                 .collect { result ->
-                    handleGetMatchDetailsResult(result, isFirstTeam, match)
+                    handleGetMatchDetailsResult(result, isFirstTeam)
                 }
         }
     }
 
     private fun handleGetMatchDetailsResult(
         result: Result<MatchDetailsDomain>,
-        isFirstTeam: Boolean,
-        match: HomeMatchesDomain?
+        isFirstTeam: Boolean
     ) {
         val matchDetails = result.getOrNull()
         if (result.isSuccess && matchDetails != null) {
             _getMatchDetailsLiveData.postValue(
-                GetMatchDetailsState.BindData(matchDetails, isFirstTeam, match)
+                GetMatchDetailsState.BindData(matchDetails, isFirstTeam)
             )
             _showLoadingLiveData.postValue(false)
         } else {

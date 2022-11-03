@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentMatchDetailsBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
@@ -31,9 +32,6 @@ class MatchDetailsFragment : Fragment() {
     private val matchDetailsViewModel: MatchDetailsViewModel by viewModel()
 
     private var binding: FragmentMatchDetailsBinding? = null
-
-    private var matchFirstTeamPlayersAdapter: MatchFirstTeamPlayersAdapter? = null
-    private var matchSecondTeamPlayersAdapter: MatchSecondTeamPlayersAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,23 +84,22 @@ class MatchDetailsFragment : Fragment() {
     private fun fetchData(match: HomeMatchesDomain) {
         if (match.opponents?.size == 2) {
             match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id, match = match)
+                fetchFirstTeamData(id = id)
             }
             match.opponents.last().opponent?.id?.let { id ->
                 fetchSecondTeamData(id = id)
             }
         } else if (match.opponents?.size == 1) {
             match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id, match = match)
+                fetchFirstTeamData(id = id)
             }
         }
     }
 
-    private fun fetchFirstTeamData(id: Int, match: HomeMatchesDomain) {
+    private fun fetchFirstTeamData(id: Int) {
         matchDetailsViewModel.getTeamDetails(
             id = id,
-            isFirstTeam = true,
-            match = match
+            isFirstTeam = true
         )
     }
 
@@ -151,17 +148,12 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindFirstData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            matchFirstTeamPlayersAdapter = team.players?.let { playerList ->
-                MatchFirstTeamPlayersAdapter(playerList)
-            }
+            val teamAdapter = team.players?.let { MatchFirstTeamPlayersAdapter(it) }
 
             binding?.matchDetailsFirstTeamPlayersReciclerView?.apply {
-                val linearLayoutManager = LinearLayoutManager(requireContext())
-                layoutManager = linearLayoutManager
+                layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = matchFirstTeamPlayersAdapter
-                (binding?.matchDetailsFirstTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
-                    .supportsChangeAnimations = false
+                adapter = teamAdapter
             }
         } else {
             lifecycleScope.launch {
@@ -173,17 +165,12 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindSecondData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            matchSecondTeamPlayersAdapter = team.players?.let { playerList ->
-                MatchSecondTeamPlayersAdapter(playerList)
-            }
+            val teamAdapter = team.players?.let { MatchSecondTeamPlayersAdapter(it) }
 
             binding?.matchDetailsSecondTeamPlayersReciclerView?.apply {
-                val linearLayoutManager = LinearLayoutManager(requireContext())
-                layoutManager = linearLayoutManager
+                layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = matchSecondTeamPlayersAdapter
-                (binding?.matchDetailsSecondTeamPlayersReciclerView?.itemAnimator as SimpleItemAnimator)
-                    .supportsChangeAnimations = false
+                adapter = teamAdapter
             }
         } else {
             lifecycleScope.launch {

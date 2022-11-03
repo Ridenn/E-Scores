@@ -139,13 +139,12 @@ class HomeMatchesFragment : Fragment(),
         }
 
         homeMatchesAdapter = HomeMatchesAdapter(mutableMatchList, this)
+
         binding?.homeMatchesRecyclerView?.apply {
-            val linearLayoutManager = LinearLayoutManager(requireContext())
+            val linearLayoutManager = LinearLayoutManager(context)
             layoutManager = linearLayoutManager
             setHasFixedSize(true)
             adapter = homeMatchesAdapter
-            (binding?.homeMatchesRecyclerView?.itemAnimator as SimpleItemAnimator)
-                .supportsChangeAnimations = false
 
             addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 override fun onLoadMore(currentPage: Int) {
