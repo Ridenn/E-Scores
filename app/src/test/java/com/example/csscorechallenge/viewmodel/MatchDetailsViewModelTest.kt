@@ -56,15 +56,15 @@ class MatchDetailsViewModelTest {
     }
 
     @Test
-    fun `should get team details data then returns loading state equal true`() =
+    fun `should get first team details data then returns loading state equal true`() =
         runTest {
             val id = Random.nextInt()
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
         }
 
     @Test
-    fun `should get team details data then returns loading state equal false`() =
+    fun `should get first team details data then returns loading state equal false`() =
         runTest {
 
             val id = Random.nextInt()
@@ -74,14 +74,14 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             advanceUntilIdle()
 
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
         }
 
     @Test
-    fun `should get team details data then returns bind data with valid list`() =
+    fun `should get first team details data then returns bind data with valid list`() =
         runTest {
 
             val id = Random.nextInt()
@@ -91,21 +91,17 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             advanceUntilIdle()
 
             Assert.assertEquals(
-                MatchDetailsViewModel.GetMatchDetailsState.BindData(
-                    mockedResponse,
-                    isFirstTeam = true,
-                    match = null
-                ),
-                viewModel.getMatchDetailsLiveData.value
+                MatchDetailsViewModel.GetFirstTeamDetailsState.BindData(mockedResponse),
+                viewModel.getFirstTeamDetailsLiveData.value
             )
         }
 
     @Test
-    fun `should get team details data then returns failure error data state`() =
+    fun `should get first team details data then returns failure error data state`() =
         runTest {
 
             val id = Random.nextInt()
@@ -115,18 +111,18 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             advanceUntilIdle()
 
             Assert.assertEquals(
-                MatchDetailsViewModel.GetMatchDetailsState.Failure(mockedThrowable),
-                viewModel.getMatchDetailsLiveData.value
+                MatchDetailsViewModel.GetFirstTeamDetailsState.Failure(mockedThrowable),
+                viewModel.getFirstTeamDetailsLiveData.value
             )
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
         }
 
     @Test
-    fun `should get team details data then returns network error data state`() =
+    fun `should get first team details data then returns network error data state`() =
         runTest {
 
             val id = Random.nextInt()
@@ -136,18 +132,18 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             advanceUntilIdle()
 
             Assert.assertEquals(
-                MatchDetailsViewModel.GetMatchDetailsState.NetworkError,
-                viewModel.getMatchDetailsLiveData.value
+                MatchDetailsViewModel.GetFirstTeamDetailsState.NetworkError,
+                viewModel.getFirstTeamDetailsLiveData.value
             )
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
         }
 
     @Test
-    fun `should get team details data then returns timeout error data state`() =
+    fun `should get first team details data then returns timeout error data state`() =
         runTest {
 
             val id = Random.nextInt()
@@ -157,12 +153,122 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getTeamDetails(id = id, isFirstTeam = true, match = null)
+            viewModel.getFirstTeamDetails(id = id)
             advanceUntilIdle()
 
             Assert.assertEquals(
-                MatchDetailsViewModel.GetMatchDetailsState.TimeoutError,
-                viewModel.getMatchDetailsLiveData.value
+                MatchDetailsViewModel.GetFirstTeamDetailsState.TimeoutError,
+                viewModel.getFirstTeamDetailsLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    //----------------------------
+
+    @Test
+    fun `should get second team details data then returns loading state equal true`() =
+        runTest {
+            val id = Random.nextInt()
+            viewModel.getSecondTeamDetails(id = id)
+            Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get second team details data then returns loading state equal false`() =
+        runTest {
+
+            val id = Random.nextInt()
+            val mockedResponse = MatchDetailsDomain(id = Random.nextInt())
+
+            whenever(getMatchDetailsUseCase.getMatchDetails(any())).thenReturn(
+                flowOf(Result.success(mockedResponse))
+            )
+
+            viewModel.getSecondTeamDetails(id = id)
+            advanceUntilIdle()
+
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get second team details data then returns bind data with valid list`() =
+        runTest {
+
+            val id = Random.nextInt()
+            val mockedResponse = MatchDetailsDomain(id = Random.nextInt())
+
+            whenever(getMatchDetailsUseCase.getMatchDetails(any())).thenReturn(
+                flowOf(Result.success(mockedResponse))
+            )
+
+            viewModel.getSecondTeamDetails(id = id)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                MatchDetailsViewModel.GetSecondTeamDetailsState.BindData(mockedResponse),
+                viewModel.getSecondTeamDetailsLiveData.value
+            )
+        }
+
+    @Test
+    fun `should get second team details data then returns failure error data state`() =
+        runTest {
+
+            val id = Random.nextInt()
+            val mockedThrowable = Exception()
+
+            whenever(getMatchDetailsUseCase.getMatchDetails(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getSecondTeamDetails(id = id)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                MatchDetailsViewModel.GetSecondTeamDetailsState.Failure(mockedThrowable),
+                viewModel.getSecondTeamDetailsLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get second team details data then returns network error data state`() =
+        runTest {
+
+            val id = Random.nextInt()
+            val mockedThrowable = UnknownHostException()
+
+            whenever(getMatchDetailsUseCase.getMatchDetails(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getSecondTeamDetails(id = id)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                MatchDetailsViewModel.GetSecondTeamDetailsState.NetworkError,
+                viewModel.getSecondTeamDetailsLiveData.value
+            )
+            Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
+        }
+
+    @Test
+    fun `should get second team details data then returns timeout error data state`() =
+        runTest {
+
+            val id = Random.nextInt()
+            val mockedThrowable = SocketTimeoutException()
+
+            whenever(getMatchDetailsUseCase.getMatchDetails(any())).thenReturn(
+                flowOf(Result.failure(mockedThrowable))
+            )
+
+            viewModel.getSecondTeamDetails(id = id)
+            advanceUntilIdle()
+
+            Assert.assertEquals(
+                MatchDetailsViewModel.GetSecondTeamDetailsState.TimeoutError,
+                viewModel.getSecondTeamDetailsLiveData.value
             )
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
         }

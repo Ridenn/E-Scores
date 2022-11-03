@@ -20,68 +20,131 @@ class MatchDetailsViewModel constructor(
     private val _showLoadingLiveData by lazy { SingleLiveEvent<Boolean>() }
     val showLoadingLiveData = _showLoadingLiveData
 
-    sealed class GetMatchDetailsState {
+    sealed class GetFirstTeamDetailsState {
         data class BindData(
-            val team: MatchDetailsDomain,
-            val isFirstTeam: Boolean
-        ) : GetMatchDetailsState()
+            val team: MatchDetailsDomain
+        ) : GetFirstTeamDetailsState()
 
-        data class Failure(val throwable: Throwable?) : GetMatchDetailsState()
-        object NetworkError : GetMatchDetailsState()
-        object TimeoutError : GetMatchDetailsState()
+        data class Failure(val throwable: Throwable?) : GetFirstTeamDetailsState()
+        object NetworkError : GetFirstTeamDetailsState()
+        object TimeoutError : GetFirstTeamDetailsState()
     }
 
-    private val _getMatchDetailsLiveData by lazy { SingleLiveEvent<GetMatchDetailsState>() }
-    val getMatchDetailsLiveData: LiveData<GetMatchDetailsState> = _getMatchDetailsLiveData
+    private val _getFirstTeamDetailsLiveData by lazy { SingleLiveEvent<GetFirstTeamDetailsState>() }
+    val getFirstTeamDetailsLiveData: LiveData<GetFirstTeamDetailsState> = _getFirstTeamDetailsLiveData
 
-    fun getTeamDetails(id: Int, isFirstTeam: Boolean) {
+    fun getFirstTeamDetails(id: Int) {
         _showLoadingLiveData.postValue(true)
         viewModelScope.launch {
             getMatchDetailsUseCase.getMatchDetails(id)
                 .collect { result ->
-                    handleGetMatchDetailsResult(result, isFirstTeam)
+                    handleGetMatchDetailsResult(result)
                 }
         }
     }
 
     private fun handleGetMatchDetailsResult(
-        result: Result<MatchDetailsDomain>,
-        isFirstTeam: Boolean
+        result: Result<MatchDetailsDomain>
     ) {
         val matchDetails = result.getOrNull()
         if (result.isSuccess && matchDetails != null) {
-            _getMatchDetailsLiveData.postValue(
-                GetMatchDetailsState.BindData(matchDetails, isFirstTeam)
+            _getFirstTeamDetailsLiveData.postValue(
+                GetFirstTeamDetailsState.BindData(matchDetails)
             )
             _showLoadingLiveData.postValue(false)
         } else {
             _showLoadingLiveData.postValue(false)
             result.exceptionOrNull()?.let { throwable ->
-                handleThrowable(throwable)
+                handleFirstTeamThrowable(throwable)
             }
         }
     }
 
-    private fun handleThrowable(throwable: Throwable) {
+    sealed class GetSecondTeamDetailsState {
+        data class BindData(
+            val team: MatchDetailsDomain
+        ) : GetSecondTeamDetailsState()
+
+        data class Failure(val throwable: Throwable?) : GetSecondTeamDetailsState()
+        object NetworkError : GetSecondTeamDetailsState()
+        object TimeoutError : GetSecondTeamDetailsState()
+    }
+
+    private val _getSecondTeamDetailsLiveData by lazy { SingleLiveEvent<GetSecondTeamDetailsState>() }
+    val getSecondTeamDetailsLiveData: LiveData<GetSecondTeamDetailsState> = _getSecondTeamDetailsLiveData
+
+    fun getSecondTeamDetails(id: Int) {
+        _showLoadingLiveData.postValue(true)
+        viewModelScope.launch {
+            getMatchDetailsUseCase.getMatchDetails(id)
+                .collect { result ->
+                    handleGetSecondTeamDetailsResult(result)
+                }
+        }
+    }
+
+    private fun handleGetSecondTeamDetailsResult(
+        result: Result<MatchDetailsDomain>
+    ) {
+        val matchDetails = result.getOrNull()
+        if (result.isSuccess && matchDetails != null) {
+            _getSecondTeamDetailsLiveData.postValue(
+                GetSecondTeamDetailsState.BindData(matchDetails)
+            )
+            _showLoadingLiveData.postValue(false)
+        } else {
+            _showLoadingLiveData.postValue(false)
+            result.exceptionOrNull()?.let { throwable ->
+                handleSecondTeamThrowable(throwable)
+            }
+        }
+    }
+
+    private fun handleFirstTeamThrowable(throwable: Throwable) {
         when (throwable) {
             is HttpException -> {
-                _getMatchDetailsLiveData.postValue(
-                    GetMatchDetailsState.Failure(throwable)
+                _getFirstTeamDetailsLiveData.postValue(
+                    GetFirstTeamDetailsState.Failure(throwable)
                 )
             }
             is UnknownHostException -> {
-                _getMatchDetailsLiveData.postValue(
-                    GetMatchDetailsState.NetworkError
+                _getFirstTeamDetailsLiveData.postValue(
+                    GetFirstTeamDetailsState.NetworkError
                 )
             }
             is SocketTimeoutException -> {
-                _getMatchDetailsLiveData.postValue(
-                    GetMatchDetailsState.TimeoutError
+                _getFirstTeamDetailsLiveData.postValue(
+                    GetFirstTeamDetailsState.TimeoutError
                 )
             }
             else -> {
-                _getMatchDetailsLiveData.postValue(
-                    GetMatchDetailsState.Failure(throwable)
+                _getFirstTeamDetailsLiveData.postValue(
+                    GetFirstTeamDetailsState.Failure(throwable)
+                )
+            }
+        }
+    }
+
+    private fun handleSecondTeamThrowable(throwable: Throwable) {
+        when (throwable) {
+            is HttpException -> {
+                _getSecondTeamDetailsLiveData.postValue(
+                    GetSecondTeamDetailsState.Failure(throwable)
+                )
+            }
+            is UnknownHostException -> {
+                _getSecondTeamDetailsLiveData.postValue(
+                    GetSecondTeamDetailsState.NetworkError
+                )
+            }
+            is SocketTimeoutException -> {
+                _getSecondTeamDetailsLiveData.postValue(
+                    GetSecondTeamDetailsState.TimeoutError
+                )
+            }
+            else -> {
+                _getSecondTeamDetailsLiveData.postValue(
+                    GetSecondTeamDetailsState.Failure(throwable)
                 )
             }
         }

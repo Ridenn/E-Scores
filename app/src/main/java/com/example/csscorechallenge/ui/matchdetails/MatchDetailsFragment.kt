@@ -63,8 +63,12 @@ class MatchDetailsFragment : Fragment() {
             }
         }
 
-        matchDetailsViewModel.getMatchDetailsLiveData.observe(viewLifecycleOwner) { teamDetails ->
+        matchDetailsViewModel.getFirstTeamDetailsLiveData.observe(viewLifecycleOwner) { teamDetails ->
             handleGetTeamDetails(teamDetails)
+        }
+
+        matchDetailsViewModel.getSecondTeamDetailsLiveData.observe(viewLifecycleOwner) { teamDetails ->
+            handleGetSecondTeamDetails(teamDetails)
         }
     }
 
@@ -97,36 +101,44 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun fetchFirstTeamData(id: Int) {
-        matchDetailsViewModel.getTeamDetails(
-            id = id,
-            isFirstTeam = true
-        )
+        matchDetailsViewModel.getFirstTeamDetails(id = id)
     }
 
     private fun fetchSecondTeamData(id: Int) {
-        matchDetailsViewModel.getTeamDetails(
-            id = id,
-            isFirstTeam = false
-        )
+        matchDetailsViewModel.getSecondTeamDetails(id = id)
     }
 
-    private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetMatchDetailsState) {
+    private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetFirstTeamDetailsState) {
         when (matchDetailsState) {
-            is MatchDetailsViewModel.GetMatchDetailsState.BindData -> {
-                if (matchDetailsState.isFirstTeam) {
-                    bindFirstData(matchDetailsState.team)
-                } else {
-                    bindSecondData(matchDetailsState.team)
-                }
+            is MatchDetailsViewModel.GetFirstTeamDetailsState.BindData -> {
+                bindFirstData(matchDetailsState.team)
             }
-            is MatchDetailsViewModel.GetMatchDetailsState.Failure -> {
+            is MatchDetailsViewModel.GetFirstTeamDetailsState.Failure -> {
                 Log.w("Error", matchDetailsState.throwable)
                 showGenericError()
             }
-            is MatchDetailsViewModel.GetMatchDetailsState.NetworkError -> {
+            is MatchDetailsViewModel.GetFirstTeamDetailsState.NetworkError -> {
                 showNetworkError()
             }
-            is MatchDetailsViewModel.GetMatchDetailsState.TimeoutError -> {
+            is MatchDetailsViewModel.GetFirstTeamDetailsState.TimeoutError -> {
+                showTimeoutError()
+            }
+        }
+    }
+
+    private fun handleGetSecondTeamDetails(matchDetailsState: MatchDetailsViewModel.GetSecondTeamDetailsState) {
+        when (matchDetailsState) {
+            is MatchDetailsViewModel.GetSecondTeamDetailsState.BindData -> {
+                bindSecondData(matchDetailsState.team)
+            }
+            is MatchDetailsViewModel.GetSecondTeamDetailsState.Failure -> {
+                Log.w("Error", matchDetailsState.throwable)
+                showGenericError()
+            }
+            is MatchDetailsViewModel.GetSecondTeamDetailsState.NetworkError -> {
+                showNetworkError()
+            }
+            is MatchDetailsViewModel.GetSecondTeamDetailsState.TimeoutError -> {
                 showTimeoutError()
             }
         }
