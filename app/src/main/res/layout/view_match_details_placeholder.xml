@@ -6,22 +6,12 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/view_home_matches_item_placeholder"
+        layout="@layout/view_match_details_first_item_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <include
-        layout="@layout/view_home_matches_item_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/view_home_matches_item_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/view_home_matches_item_placeholder"
+        layout="@layout/view_match_details_second_item_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

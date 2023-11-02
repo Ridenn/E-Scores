@@ -65,8 +65,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-
             <View
                 android:id="@+id/homeMatchesBottomDividerView"
                 android:layout_width="match_parent"

@@ -16,11 +16,14 @@ import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentMatchDetailsBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
+import com.example.csscorechallenge.extensions.fadeIn
+import com.example.csscorechallenge.extensions.fadeOut
 import com.example.csscorechallenge.extensions.gone
 import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.matchdetails.adapter.MatchFirstTeamPlayersAdapter
 import com.example.csscorechallenge.ui.matchdetails.adapter.MatchSecondTeamPlayersAdapter
 import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
+import com.example.csscorechallenge.utils.AnimationConstants
 import com.example.csscorechallenge.utils.FormatDateUtils
 import com.example.csscorechallenge.utils.ToastUtils
 import kotlinx.coroutines.delay
@@ -56,11 +59,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun setUpViewModelObservers() {
         matchDetailsViewModel.showLoadingLiveData.observe(viewLifecycleOwner) { showLoading ->
-            if (showLoading) {
-                showOrHideLoading(isShow = true)
-            } else {
-                showOrHideLoading(isShow = false)
-            }
+            showOrHideLoading(isShowLoading = showLoading)
         }
 
         matchDetailsViewModel.getFirstTeamDetailsLiveData.observe(viewLifecycleOwner) { teamDetails ->
@@ -72,15 +71,17 @@ class MatchDetailsFragment : Fragment() {
         }
     }
 
-    private fun showOrHideLoading(isShow: Boolean) {
-        if (isShow) {
-            binding?.matchDetailsProgressBar?.visible()
+    private fun showOrHideLoading(isShowLoading: Boolean) {
+        if (isShowLoading) {
+            binding?.matchDetailsLoadingLayout?.startShimmer()
         } else {
             lifecycleScope.launch {
-                delay(LOADING_DELAY)
-                binding?.matchDetailsProgressBar?.gone()
-                binding?.homeMatchesDetails?.visible()
-                binding?.homeMatchesTeamsVersus?.visible()
+                delay(AnimationConstants.SHIMMER.LOADING_DELAY)
+                binding?.matchDetailsLoadingLayout?.stopShimmer()
+                binding?.matchDetailsLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
+                    binding?.homeMatchesDetails?.fadeIn()
+                    binding?.homeMatchesTeamsVersus?.fadeIn()
+                }
             }
         }
     }

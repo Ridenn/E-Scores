@@ -81,11 +81,7 @@ class HomeMatchesFragment : Fragment(),
 
     private fun setUpViewModelObservers() {
         homeMatchesViewModel.showLoadingLiveData.observe(viewLifecycleOwner) { showLoading ->
-            if (showLoading) {
-                showOrHideLoading(isShowLoading = true)
-            } else {
-                showOrHideLoading(isShowLoading = false)
-            }
+            showOrHideLoading(isShowLoading = showLoading)
         }
 
         homeMatchesViewModel.getHomeMatchesLiveData.observe(viewLifecycleOwner) { homeMatches ->
@@ -159,19 +155,11 @@ class HomeMatchesFragment : Fragment(),
 
     private fun showOrHideLoading(isShowLoading: Boolean) {
         if (isShowLoading) {
-//            binding?.homeMatchesProgressBar?.visible()
-//            binding?.homeMatchesSwipeRefresh?.isRefreshing = false
-
             binding?.homeMatchesLoadingLayout?.startShimmer()
-            binding?.homeMatchesRecyclerView?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
-                binding?.homeMatchesLoadingLayout?.fadeIn()
-            }
             binding?.homeMatchesSwipeRefresh?.isRefreshing = false
         } else {
             lifecycleScope.launch {
                 delay(AnimationConstants.SHIMMER.LOADING_DELAY)
-//                binding?.homeMatchesProgressBar?.gone()
-//                binding?.homeMatchesRecyclerView?.visible()
                 binding?.homeMatchesLoadingLayout?.stopShimmer()
                 binding?.homeMatchesLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
                     binding?.homeMatchesRecyclerView?.fadeIn()
