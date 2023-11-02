@@ -71,7 +71,7 @@ class HomeMatchesFragment : Fragment(),
 
     private fun setUpSwipeListener() {
         binding?.homeMatchesSwipeRefresh?.setOnRefreshListener {
-//            homeMatchesAdapter?.updateHomeMatchesList()
+            homeMatchesAdapter?.updateHomeMatchesList()
             fetchData(isSwipeToRefresh = true)
         }
     }

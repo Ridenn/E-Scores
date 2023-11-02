@@ -6,10 +6,12 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ViewLeagueSeriesBinding
+import com.example.csscorechallenge.utils.LoadingUtils
 
 class LeagueSeriesView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -29,16 +31,20 @@ class LeagueSeriesView @JvmOverloads constructor(
     }
 
     private fun setCoverImage(coverImageUrl: String?) {
+        val loadingProgressBar = LoadingUtils.showloadingProgressBar(context)
+        loadingProgressBar.start()
+
         coverImageUrl?.let { validUrl ->
             Glide.with(binding.viewLeagueSeriesImageView.context)
                 .load(Uri.parse(validUrl.trim()))
-                .error(R.drawable.ic_team_placeholder)
+                .placeholder(loadingProgressBar)
+                .error(R.drawable.ic_error_team)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.viewLeagueSeriesImageView)
         } ?: run {
             binding.viewLeagueSeriesImageView.setImageDrawable(
                 AppCompatResources.getDrawable(
-                    context, R.drawable.ic_team_placeholder
+                    context, R.drawable.ic_error_team
                 )
             )
         }

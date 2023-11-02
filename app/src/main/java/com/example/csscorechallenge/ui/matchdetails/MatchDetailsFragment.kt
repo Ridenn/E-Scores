@@ -145,7 +145,6 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun bindMatch(match: HomeMatchesDomain) {
-
         binding?.matchDetailsTeamOpponents?.bind(match)
 
         binding?.matchDetailsDateLabel?.text =
@@ -156,7 +155,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindFirstData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            val teamAdapter = team.players?.let { MatchFirstTeamPlayersAdapter(it) }
+            val teamAdapter = team.players?.let { teamPlayerList -> MatchFirstTeamPlayersAdapter(teamPlayerList, requireContext()) }
 
             binding?.matchDetailsFirstTeamPlayersReciclerView?.apply {
                 layoutManager = LinearLayoutManager(context)
@@ -173,7 +172,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindSecondData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            val teamAdapter = team.players?.let { MatchSecondTeamPlayersAdapter(it) }
+            val teamAdapter = team.players?.let { teamPlayerList -> MatchSecondTeamPlayersAdapter(teamPlayerList, requireContext()) }
 
             binding?.matchDetailsSecondTeamPlayersReciclerView?.apply {
                 layoutManager = LinearLayoutManager(context)

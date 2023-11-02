@@ -4,11 +4,17 @@ import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ViewTeamPresentedBinding
+import com.example.csscorechallenge.utils.LoadingUtils
 
 class TeamPresentationView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -27,16 +33,20 @@ class TeamPresentationView @JvmOverloads constructor(
     }
 
     private fun setCoverImage(coverImageUrl: String?) {
+        val loadingProgressBar = LoadingUtils.showloadingProgressBar(context)
+        loadingProgressBar.start()
+
         coverImageUrl?.let { validUrl ->
             Glide.with(binding.viewTeamPresentedTeamImageView.context)
                 .load(Uri.parse(validUrl.trim()))
-                .placeholder(R.drawable.ic_team_placeholder)
-                .error(R.drawable.ic_team_placeholder)
+                .placeholder(loadingProgressBar)
+                .error(R.drawable.ic_error_team)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.viewTeamPresentedTeamImageView)
         } ?: run {
             binding.viewTeamPresentedTeamImageView.setImageDrawable(
-                ResourcesCompat.getDrawable(
-                    resources, R.drawable.ic_team_placeholder, null
+                AppCompatResources.getDrawable(
+                    context, R.drawable.ic_error_team
                 )
             )
         }
