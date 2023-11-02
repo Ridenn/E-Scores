@@ -49,7 +49,7 @@ class HomeMatchesFragment : Fragment(),
 
         setUpSwipeListener()
         setUpViewModelObservers()
-        fetchData()
+        fetchData(isSwipeToRefresh = true)
     }
 
     override fun onResume() {
@@ -71,8 +71,8 @@ class HomeMatchesFragment : Fragment(),
 
     private fun setUpSwipeListener() {
         binding?.homeMatchesSwipeRefresh?.setOnRefreshListener {
-            homeMatchesAdapter?.updateHomeMatchesList()
-            fetchData()
+//            homeMatchesAdapter?.updateHomeMatchesList()
+            fetchData(isSwipeToRefresh = true)
         }
     }
 
@@ -96,7 +96,8 @@ class HomeMatchesFragment : Fragment(),
                 homeMatchesViewModel.getHomeMatches(
                     homeMatchesState.page,
                     homeMatchesState.appendData,
-                    homeMatchesState.matchList
+                    homeMatchesState.matchList,
+                    homeMatchesState.isSwipeToRefresh
                 )
             }
         }
@@ -105,10 +106,11 @@ class HomeMatchesFragment : Fragment(),
     private fun handleGetHomeMatches(homeMatchesState: HomeMatchesViewModel.GetHomeMatchesState) {
         when (homeMatchesState) {
             is HomeMatchesViewModel.GetHomeMatchesState.BindData -> {
-                bindData(homeMatchesState.matchList)
+                bindData(homeMatchesState.matchList, homeMatchesState.swipeToRefresh)
             }
             is HomeMatchesViewModel.GetHomeMatchesState.AppendData -> {
                 homeMatchesAdapter?.append(homeMatchesState.matchList)
+                showLoadingMore(false)
             }
             is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
                 Log.w("Error", homeMatchesState.throwable)
@@ -124,7 +126,8 @@ class HomeMatchesFragment : Fragment(),
     }
 
     private fun bindData(
-        matchList: List<HomeMatchesDomain>
+        matchList: List<HomeMatchesDomain>,
+        isSwipeToRefresh: Boolean = false
     ) {
         val mutableMatchList = matchList.toMutableList()
 
@@ -143,16 +146,26 @@ class HomeMatchesFragment : Fragment(),
             adapter = homeMatchesAdapter
 
             addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
-                override fun onLoadMore(currentPage: Int) {
-                    fetchData(currentPage, true)
+                override fun onLoadMore(currentPage: Int, isNotSwipe: Boolean) {
+                    val swipeToRefresh = if (isNotSwipe) false else isSwipeToRefresh
+                    fetchData(page = currentPage, appendData = true, isSwipeToRefresh = swipeToRefresh)
                 }
             })
         }
     }
 
+    private fun showLoadingMore(isShowLoading: Boolean) {
+        binding?.homeMatchesProgressBar?.visibility = if (isShowLoading) View.VISIBLE else View.GONE
+    }
+
     private fun showOrHideLoading(isShowLoading: Boolean) {
         if (isShowLoading) {
             binding?.homeMatchesLoadingLayout?.startShimmer()
+
+            // This part is to make the shimmer layout visible again when swipe to refresh
+            binding?.homeMatchesRecyclerView?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
+                binding?.homeMatchesLoadingLayout?.fadeIn()
+            }
             binding?.homeMatchesSwipeRefresh?.isRefreshing = false
         } else {
             lifecycleScope.launch {
@@ -165,8 +178,13 @@ class HomeMatchesFragment : Fragment(),
         }
     }
 
-    private fun fetchData(page: Int = INITIAL_PAGE, appendData: Boolean = false) {
-        homeMatchesViewModel.getRunningHomeMatches(page, appendData)
+    private fun fetchData(
+        page: Int = INITIAL_PAGE,
+        appendData: Boolean = false,
+        isSwipeToRefresh: Boolean = false
+    ) {
+        showLoadingMore(!isSwipeToRefresh)
+        homeMatchesViewModel.getRunningHomeMatches(page, appendData, isSwipeToRefresh)
     }
 
     private fun showGenericError() {
@@ -192,6 +210,5 @@ class HomeMatchesFragment : Fragment(),
 
     companion object {
         private const val INITIAL_PAGE = 1
-        private const val LOADING_DELAY = 250L
     }
 }

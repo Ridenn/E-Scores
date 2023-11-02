@@ -25,7 +25,7 @@ class HomeMatchesViewModel constructor(
     val showLoadingLiveData = _showLoadingLiveData
 
     sealed class GetHomeMatchesState {
-        data class BindData(val matchList: List<HomeMatchesDomain>) : GetHomeMatchesState()
+        data class BindData(val matchList: List<HomeMatchesDomain>, val swipeToRefresh: Boolean) : GetHomeMatchesState()
         data class AppendData(val matchList: List<HomeMatchesDomain>) : GetHomeMatchesState()
         data class Failure(val throwable: Throwable?) : GetHomeMatchesState()
         object NetworkError : GetHomeMatchesState()
@@ -38,20 +38,23 @@ class HomeMatchesViewModel constructor(
     fun getHomeMatches(
         page: Int,
         appendData: Boolean = true,
-        matchList: List<HomeMatchesDomain>? = null
+        matchList: List<HomeMatchesDomain>? = null,
+        swipeToRefresh: Boolean
     ) {
         if (!appendData) {
             _showLoadingLiveData.postValue(true)
         }
+
         currentPage = if (page == INITIAL_PAGE) {
             INITIAL_PAGE
         } else {
             page
         }
+
         viewModelScope.launch {
             getHomeMatchesUseCase.getHomeMatches(currentPage)
                 .collect { result ->
-                    handleGetHomeMatchesResult(result, appendData, matchList)
+                    handleGetHomeMatchesResult(result, appendData, matchList, swipeToRefresh)
                 }
         }
     }
@@ -59,7 +62,8 @@ class HomeMatchesViewModel constructor(
     private fun handleGetHomeMatchesResult(
         result: Result<List<HomeMatchesDomain>>,
         appendData: Boolean,
-        matchList: List<HomeMatchesDomain>? = null
+        matchList: List<HomeMatchesDomain>? = null,
+        swipeToRefresh: Boolean
     ) {
         val homeMatches = result.getOrNull()
         if (result.isSuccess && homeMatches != null) {
@@ -76,7 +80,7 @@ class HomeMatchesViewModel constructor(
                 mergedMatchesList.addAll(homeMatches)
 
                 _getHomeMatchesLiveData.postValue(
-                    mergedMatchesList.let { GetHomeMatchesState.BindData(it) }
+                    mergedMatchesList.let { matchList -> GetHomeMatchesState.BindData(matchList, swipeToRefresh) }
                 )
             }
             _showLoadingLiveData.postValue(false)
@@ -117,15 +121,15 @@ class HomeMatchesViewModel constructor(
         data class BindData(
             val matchList: List<HomeMatchesDomain>,
             val page: Int,
-            val appendData: Boolean
+            val appendData: Boolean,
+            val isSwipeToRefresh: Boolean
         ) : GetRunningHomeMatchesState()
     }
 
     private val _getRunningHomeMatchesLiveData by lazy { SingleLiveEvent<GetRunningHomeMatchesState>() }
-    val getRunningHomeMatchesLiveData: LiveData<GetRunningHomeMatchesState> =
-        _getRunningHomeMatchesLiveData
+    val getRunningHomeMatchesLiveData: LiveData<GetRunningHomeMatchesState> = _getRunningHomeMatchesLiveData
 
-    fun getRunningHomeMatches(page: Int, appendData: Boolean) {
+    fun getRunningHomeMatches(page: Int, appendData: Boolean, isSwipeToRefresh: Boolean) {
         if (!appendData) {
             _showLoadingLiveData.postValue(true)
         }
@@ -135,7 +139,8 @@ class HomeMatchesViewModel constructor(
                     handleGetRunningHomeMatchesResult(
                         result,
                         page,
-                        appendData
+                        appendData,
+                        isSwipeToRefresh
                     )
                 }
         }
@@ -144,7 +149,8 @@ class HomeMatchesViewModel constructor(
     private fun handleGetRunningHomeMatchesResult(
         result: Result<List<HomeMatchesDomain>>,
         page: Int,
-        appendData: Boolean
+        appendData: Boolean,
+        isSwipeToRefresh: Boolean
     ) {
         val homeMatches = result.getOrNull()
         if (result.isSuccess) {
@@ -153,7 +159,8 @@ class HomeMatchesViewModel constructor(
                     GetRunningHomeMatchesState.BindData(
                         it,
                         page,
-                        appendData
+                        appendData,
+                        isSwipeToRefresh
                     )
                 }
             )

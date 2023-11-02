@@ -18,12 +18,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.koin.core.context.stopKoin
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import retrofit2.HttpException
-import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.random.Random
@@ -56,7 +53,11 @@ class HomeMatchesViewModelTest {
     fun `should get home matches data then returns loading state equal true`() =
         runTest {
             val page = Random.nextInt()
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
         }
 
@@ -74,7 +75,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
@@ -94,11 +99,15 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
-                HomeMatchesViewModel.GetHomeMatchesState.BindData(mockedResponse),
+                HomeMatchesViewModel.GetHomeMatchesState.BindData(mockedResponse, swipeToRefresh),
                 viewModel.getHomeMatchesLiveData.value
             )
         }
@@ -116,11 +125,15 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = true)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = true,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
-                HomeMatchesViewModel.GetHomeMatchesState.AppendData(mockedResponse),
+                HomeMatchesViewModel.GetHomeMatchesState.AppendData(mockedResponse, swipeToRefresh),
                 viewModel.getHomeMatchesLiveData.value
             )
         }
@@ -136,7 +149,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -157,7 +174,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -178,7 +199,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getHomeMatches(page = page, appendData = false)
+            viewModel.getHomeMatches(
+                page = page,
+                appendData = false,
+                swipeToRefresh = homeMatchesState.isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -202,11 +227,20 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getRunningHomeMatches(page = page, appendData = false)
+            viewModel.getRunningHomeMatches(
+                page = page,
+                appendData = false,
+                isSwipeToRefresh = isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
-                HomeMatchesViewModel.GetRunningHomeMatchesState.BindData(mockedResponse, page, false),
+                HomeMatchesViewModel.GetRunningHomeMatchesState.BindData(
+                    mockedResponse,
+                    page,
+                    false,
+                    isSwipeToRefresh
+                ),
                 viewModel.getRunningHomeMatchesLiveData.value
             )
         }
@@ -222,7 +256,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = page, appendData = false)
+            viewModel.getRunningHomeMatches(
+                page = page,
+                appendData = false,
+                isSwipeToRefresh = isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -242,7 +280,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = page, appendData = false)
+            viewModel.getRunningHomeMatches(
+                page = page,
+                appendData = false,
+                isSwipeToRefresh = isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -262,7 +304,11 @@ class HomeMatchesViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getRunningHomeMatches(page = page, appendData = false)
+            viewModel.getRunningHomeMatches(
+                page = page,
+                appendData = false,
+                isSwipeToRefresh = isSwipeToRefresh
+            )
             advanceUntilIdle()
 
             Assert.assertEquals(

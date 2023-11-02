@@ -8,7 +8,7 @@ abstract class EndlessRecyclerOnScrollListener(
 ) : RecyclerView.OnScrollListener() {
 
     companion object {
-        private const val INITIAL_PAGE = 1
+        private const val INITIAL_PAGE = 0
     }
 
     // The total number of items in the dataset after the last load
@@ -18,7 +18,7 @@ abstract class EndlessRecyclerOnScrollListener(
     private var loading = true
 
     // The minimum amount of items to have below your current scroll position before loading more.
-    private val visibleThreshold = 0
+    private val visibleThreshold = 7
 
     private var firstVisibleItem = 0
     private var visibleItemCount: Int = 0
@@ -37,12 +37,15 @@ abstract class EndlessRecyclerOnScrollListener(
                 previousTotal = totalItemCount
             }
         }
-        if (!loading && totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold) {
+        if (!loading &&
+            totalItemCount != 0 &&
+            totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold)
+        {
             currentPage++
-            onLoadMore(currentPage)
+            onLoadMore(currentPage, true)
             loading = true
         }
     }
 
-    abstract fun onLoadMore(currentPage: Int)
+    abstract fun onLoadMore(currentPage: Int, isNotSwipe: Boolean)
 }
