@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Base64
 
 object AppServiceFactory {
 
@@ -34,7 +35,7 @@ object AppServiceFactory {
                     .newBuilder()
                     .header(
                         API_HEADER_PARAMETER,
-                        API_HEADER_VALUE_PREFIX + BEARER_TOKEN
+                        API_HEADER_VALUE_PREFIX + String(Base64.getDecoder().decode(BEARER_TOKEN))
                     ).build()
             )
         } else {
