@@ -15,4 +15,5 @@
     <color name="font_light_grey">#C4C4C4</color>
     <color name="font_grey">#515060</color>
     <color name="font_grey_players">#6C6B7E</color>
+    <color name="grey_DDDDDD">#DDDDDD</color>
 </resources>

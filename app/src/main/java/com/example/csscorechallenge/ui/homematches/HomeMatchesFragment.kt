@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
+import com.example.csscorechallenge.extensions.fadeIn
+import com.example.csscorechallenge.extensions.fadeOut
 import com.example.csscorechallenge.extensions.gone
 import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
+import com.example.csscorechallenge.utils.AnimationConstants
 import com.example.csscorechallenge.utils.EndlessRecyclerOnScrollListener
 import com.example.csscorechallenge.utils.ToastUtils
 import kotlinx.coroutines.delay
@@ -79,9 +82,9 @@ class HomeMatchesFragment : Fragment(),
     private fun setUpViewModelObservers() {
         homeMatchesViewModel.showLoadingLiveData.observe(viewLifecycleOwner) { showLoading ->
             if (showLoading) {
-                showOrHideLoading(isShow = true)
+                showOrHideLoading(isShowLoading = true)
             } else {
-                showOrHideLoading(isShow = false)
+                showOrHideLoading(isShowLoading = false)
             }
         }
 
@@ -154,15 +157,25 @@ class HomeMatchesFragment : Fragment(),
         }
     }
 
-    private fun showOrHideLoading(isShow: Boolean) {
-        if (isShow) {
-            binding?.homeMatchesProgressBar?.visible()
+    private fun showOrHideLoading(isShowLoading: Boolean) {
+        if (isShowLoading) {
+//            binding?.homeMatchesProgressBar?.visible()
+//            binding?.homeMatchesSwipeRefresh?.isRefreshing = false
+
+            binding?.homeMatchesLoadingLayout?.startShimmer()
+            binding?.homeMatchesRecyclerView?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
+                binding?.homeMatchesLoadingLayout?.fadeIn()
+            }
             binding?.homeMatchesSwipeRefresh?.isRefreshing = false
         } else {
             lifecycleScope.launch {
-                delay(LOADING_DELAY)
-                binding?.homeMatchesProgressBar?.gone()
-                binding?.homeMatchesRecyclerView?.visible()
+                delay(AnimationConstants.SHIMMER.LOADING_DELAY)
+//                binding?.homeMatchesProgressBar?.gone()
+//                binding?.homeMatchesRecyclerView?.visible()
+                binding?.homeMatchesLoadingLayout?.stopShimmer()
+                binding?.homeMatchesLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
+                    binding?.homeMatchesRecyclerView?.fadeIn()
+                }
             }
         }
     }
