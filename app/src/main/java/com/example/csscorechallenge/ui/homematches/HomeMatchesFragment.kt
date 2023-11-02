@@ -10,14 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.extensions.fadeIn
 import com.example.csscorechallenge.extensions.fadeOut
-import com.example.csscorechallenge.extensions.gone
-import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.utils.AnimationConstants

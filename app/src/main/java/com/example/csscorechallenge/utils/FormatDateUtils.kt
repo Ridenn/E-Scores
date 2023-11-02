@@ -3,6 +3,7 @@ package com.example.csscorechallenge.utils
 import android.annotation.SuppressLint
 import com.example.csscorechallenge.extensions.toDate
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
@@ -12,18 +13,21 @@ object FormatDateUtils {
     private const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"
     private const val HOUR_MINUTE_FORMAT = "HH:mm"
     private const val CALENDAR_FORMAT = "dd.MM HH:mm"
-    private const val WEEK_FORMAT = "E, HH:mm"
+    private const val WEEK_FORMAT = "EEEE, HH:mm"
 
     fun convertToReaderReadableDate(readerDate: String): String? {
         val sdfMonthDay = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.getDefault())
 
         val resultDate = readerDate.toDate(DEFAULT_PATTERN_SIMPLE_DATE_FORMAT)
-        val current = sdfMonthDay.format(Date())
 
-        return if (current == resultDate?.let { sdfMonthDay.format(it) }) {
+        val today = sdfMonthDay.format(Date())
+
+        return if (today == resultDate?.let { sdfMonthDay.format(it) }) {
             "Hoje, " + resultDate?.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
+        } else if (getDaysBetweenDates(today, sdfMonthDay.format(resultDate)) == 1) {
+            "Amanhã, " + resultDate?.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
         } else {
-            if (getDaysBetweenDates(current, sdfMonthDay.format(resultDate)) > 5) {
+            if (getDaysBetweenDates(today, sdfMonthDay.format(resultDate)) > 6) {
                 simpleDateFormat(CALENDAR_FORMAT).format(resultDate)
             } else {
                 simpleDateFormat(WEEK_FORMAT).format(resultDate)
