@@ -22,6 +22,8 @@ class HomeMatchesAdapter(
     private val listener: HomeMatchesAdapterListClickListener
 ) : RecyclerView.Adapter<HomeMatchesAdapter.HomeMatchesAdapterViewHolder>() {
 
+    private lateinit var currentMatchList: List<HomeMatchesDomain>
+
     interface HomeMatchesAdapterListClickListener {
         fun onMatchClick(match: HomeMatchesDomain)
     }
@@ -31,8 +33,11 @@ class HomeMatchesAdapter(
             val lastIndex = matchList.lastIndex
             matchList.addAll(newMatchList)
             notifyItemRangeChanged(lastIndex, matchList.size)
+            currentMatchList = matchList
         }
     }
+
+    fun getMatchList(): List<HomeMatchesDomain> = currentMatchList
 
     fun updateHomeMatchesList() {
         matchList.clear()

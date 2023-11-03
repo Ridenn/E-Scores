@@ -15,11 +15,37 @@ class HomeMatchesViewModel constructor(
     private val getHomeMatchesUseCase: GetHomeMatchesUseCase
 ) : ViewModel() {
 
-    companion object {
-        private const val INITIAL_PAGE = 1
-    }
+    private lateinit var currentMatchList: List<HomeMatchesDomain>
+    private var currentListPosition: Int = 0
 
     private var currentPage: Int = INITIAL_PAGE
+
+    fun setup(currentMatchList: List<HomeMatchesDomain>?) {
+        currentMatchList?.let {
+            this.currentMatchList = it
+        }
+    }
+
+    fun saveCurrentListPosition(position: Int) {
+        currentListPosition = position
+    }
+
+    fun getCurrentListPosition(): Int {
+        return currentListPosition
+    }
+
+    fun bindInitialState() {
+        _showLoadingLiveData.postValue(false)
+        _getHomeMatchesLiveData.postValue(
+            GetHomeMatchesState.BindData(currentMatchList, false)
+        )
+    }
+
+    fun isInitialized(): Boolean {
+        return ::currentMatchList.isInitialized
+    }
+
+
 
     private val _showLoadingLiveData by lazy { SingleLiveEvent<Boolean>() }
     val showLoadingLiveData = _showLoadingLiveData
@@ -169,5 +195,9 @@ class HomeMatchesViewModel constructor(
                 handleThrowable(throwable)
             }
         }
+    }
+
+    companion object {
+        private const val INITIAL_PAGE = 1
     }
 }

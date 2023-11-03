@@ -37,7 +37,6 @@ class HomeMatchesFragment : Fragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val inflateBinding = FragmentHomeMatchesBinding.inflate(inflater, container, false)
         binding = inflateBinding
         return inflateBinding.root
@@ -49,12 +48,19 @@ class HomeMatchesFragment : Fragment(),
 
         setUpSwipeListener()
         setUpViewModelObservers()
-        fetchData(isSwipeToRefresh = true)
+        if (homeMatchesViewModel.isInitialized()) {
+            homeMatchesViewModel.bindInitialState()
+        } else {
+            fetchData(isSwipeToRefresh = true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+        if (homeMatchesViewModel.isInitialized()) {
+            homeMatchesViewModel.bindInitialState()
+        }
     }
 
     override fun onDestroyView() {
@@ -64,6 +70,9 @@ class HomeMatchesFragment : Fragment(),
     }
 
     override fun onMatchClick(match: HomeMatchesDomain) {
+        homeMatchesViewModel.saveCurrentListPosition(
+            (binding?.homeMatchesRecyclerView?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        )
         findNavController().navigate(
             HomeMatchesFragmentDirections.toMatchDetails(match)
         )
@@ -107,10 +116,12 @@ class HomeMatchesFragment : Fragment(),
         when (homeMatchesState) {
             is HomeMatchesViewModel.GetHomeMatchesState.BindData -> {
                 bindData(homeMatchesState.matchList, homeMatchesState.swipeToRefresh)
+                homeMatchesViewModel.setup(homeMatchesState.matchList)
             }
             is HomeMatchesViewModel.GetHomeMatchesState.AppendData -> {
                 homeMatchesAdapter?.append(homeMatchesState.matchList)
                 showLoadingMore(false)
+                homeMatchesViewModel.setup(homeMatchesAdapter?.getMatchList())
             }
             is HomeMatchesViewModel.GetHomeMatchesState.Failure -> {
                 Log.w("Error", homeMatchesState.throwable)
@@ -144,6 +155,7 @@ class HomeMatchesFragment : Fragment(),
             layoutManager = linearLayoutManager
             setHasFixedSize(true)
             adapter = homeMatchesAdapter
+            scrollToPosition(homeMatchesViewModel.getCurrentListPosition())
 
             addOnScrollListener(object : EndlessRecyclerOnScrollListener(linearLayoutManager) {
                 override fun onLoadMore(currentPage: Int, isNotSwipe: Boolean) {
