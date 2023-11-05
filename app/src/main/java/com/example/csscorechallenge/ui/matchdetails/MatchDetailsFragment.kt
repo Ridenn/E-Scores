@@ -46,7 +46,7 @@ class MatchDetailsFragment : Fragment() {
         val match: HomeMatchesDomain =
             MatchDetailsFragmentArgs.fromBundle(requireArguments()).selectedMatch
 
-        setUpActionBar(match.league?.name, match.serie?.fullName)
+        setupToolbar(match.name)
         setUpViewModelObservers()
         fetchData(match)
         bindMatch(match)
@@ -140,8 +140,12 @@ class MatchDetailsFragment : Fragment() {
         }
     }
 
-    private fun setUpActionBar(leagueName: String?, serieName: String?) {
+    private fun setupToolbarWithLeagueAndSerie(leagueName: String?, serieName: String?) {
         (activity as AppCompatActivity).supportActionBar?.title = "$leagueName $serieName"
+    }
+
+    private fun setupToolbar(gameName: String?) {
+        (activity as AppCompatActivity).supportActionBar?.title = "$gameName"
     }
 
     private fun bindMatch(match: HomeMatchesDomain) {
