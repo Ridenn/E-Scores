@@ -82,7 +82,6 @@ class HomeMatchesAdapter(
             view.findViewById(R.id.homeMatchesTime)
 
         fun bind(match: HomeMatchesDomain) {
-
             homeMatchesTimeView.apply {
                 when (match.status?.let { MatchStatusUtils.getMatchStatus(it) }) {
                     is MatchStatusUtils.MatchStatus.RUNNING -> {

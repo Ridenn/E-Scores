@@ -27,10 +27,13 @@ data class HomeMatchesRemoteResponse(
     val serie: SerieRemoteResponse?,
 
     @SerializedName("results")
-    val results: List<OpponentsRemoteResponse>?,
+    val results: List<ResultsRemoteResponse>?,
 
     @SerializedName("opponents")
-    val opponents: List<OpponentsRemoteResponse>?
+    val opponents: List<OpponentsRemoteResponse>?,
+
+    @SerializedName("number_of_games")
+    val numberOfGames: Int?
 
 ) : Parcelable
 
@@ -42,5 +45,7 @@ fun HomeMatchesRemoteResponse.toDomain(): HomeMatchesDomain =
         name = name,
         league = league?.toDomain(),
         serie = serie?.toDomain(),
-        opponents = opponents?.map { it.toDomain() }
+        results = results?.map { it.toDomain() },
+        opponents = opponents?.map { it.toDomain() },
+        numberOfGames = numberOfGames
     )

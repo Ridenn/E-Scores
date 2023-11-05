@@ -7,6 +7,7 @@
     <string name="matches_now_label">AGORA</string>
     <string name="matches_versus_label">VS</string>
     <string name="match_details_players_error_label">"Sem jogadores para exibir no time "</string>
+    <string name="match_details_map_info_label">Mapa %1s de%2s</string>
     <string name="generic_error_label">Ops… ocorreu um erro. Tente novamente mais tarde.</string>
     <string name="network_error_label">Ops… sem conexão com a internet 😢.\nTente novamente após retomar sua conexão.</string>
     <string name="timeout_error_label">Tempo esgotado 😢.\nTente novamente mais tarde.</string>

@@ -106,7 +106,7 @@ class HomeMatchesViewModel constructor(
                 mergedMatchesList.addAll(homeMatches)
 
                 _getHomeMatchesLiveData.postValue(
-                    mergedMatchesList.let { matchList -> GetHomeMatchesState.BindData(matchList, swipeToRefresh) }
+                    mergedMatchesList.let { matches -> GetHomeMatchesState.BindData(matches, swipeToRefresh) }
                 )
             }
             _showLoadingLiveData.postValue(false)

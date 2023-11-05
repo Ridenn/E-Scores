@@ -70,6 +70,7 @@
         app:lottie_fileName="pac_man_loading_animation.json"
         app:lottie_autoPlay="true"
         app:lottie_repeatMode="restart"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

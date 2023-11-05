@@ -146,11 +146,6 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindMatch(match: HomeMatchesDomain) {
         binding?.matchDetailsTeamOpponents?.bind(match)
-
-        binding?.matchDetailsDateLabel?.text =
-            match.beginAt?.let {
-                FormatDateUtils.convertToReaderReadableDate(it)
-            }
     }
 
     private fun bindFirstData(team: MatchDetailsDomain) {

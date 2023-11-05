@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.example.csscorechallenge.ui.common.TeamPresentationView
+        android:id="@+id/teamOponentsFirstTeamView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/teamOponentsFirstTeamScoreView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/teamOponentsFirstTeamView"
+        app:layout_constraintStart_toEndOf="@id/teamOponentsFirstTeamView"
+        app:layout_constraintTop_toTopOf="@+id/teamOponentsFirstTeamView"
+        tools:visibility="visible"
+        tools:text="2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/teamOponentsMatchDetailsDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="60dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/teamOponentsFirstTeamView"
+        app:layout_constraintEnd_toStartOf="@id/teamOponentsSecondTeamView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Hoje, 14:30" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/teamOponentsMatchDetailsMapInfoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/font_80"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/teamOponentsFirstTeamView"
+        app:layout_constraintEnd_toStartOf="@id/teamOponentsSecondTeamView"
+        tools:visibility="visible"
+        tools:text="Mapa 2/3" />
+
+    <com.example.csscorechallenge.ui.common.TeamPresentationView
+        android:id="@+id/teamOponentsSecondTeamView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/teamOponentsSecondTeamScoreView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/teamOponentsSecondTeamView"
+        app:layout_constraintEnd_toStartOf="@id/teamOponentsSecondTeamView"
+        app:layout_constraintTop_toTopOf="@+id/teamOponentsSecondTeamView"
+        tools:visibility="visible"
+        tools:text="0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
