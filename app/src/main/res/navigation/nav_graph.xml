@@ -27,7 +27,9 @@
         <action
             android:id="@+id/to_matchDetails"
             app:destination="@id/matchDetailsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim" />
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:popUpToInclusive="false"
+            app:restoreState="true"/>
     </fragment>
 
     <fragment

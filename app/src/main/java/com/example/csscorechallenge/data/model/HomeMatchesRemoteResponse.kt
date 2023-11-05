@@ -26,6 +26,9 @@ data class HomeMatchesRemoteResponse(
     @SerializedName("serie")
     val serie: SerieRemoteResponse?,
 
+    @SerializedName("results")
+    val results: List<OpponentsRemoteResponse>?,
+
     @SerializedName("opponents")
     val opponents: List<OpponentsRemoteResponse>?
 

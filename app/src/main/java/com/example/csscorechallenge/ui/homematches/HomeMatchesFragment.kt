@@ -34,7 +34,8 @@ class HomeMatchesFragment : Fragment(),
     private var homeMatchesAdapter: HomeMatchesAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val inflateBinding = FragmentHomeMatchesBinding.inflate(inflater, container, false)
@@ -81,6 +82,7 @@ class HomeMatchesFragment : Fragment(),
     private fun setUpSwipeListener() {
         binding?.homeMatchesSwipeRefresh?.setOnRefreshListener {
             homeMatchesAdapter?.updateHomeMatchesList()
+            homeMatchesViewModel.saveCurrentListPosition(0)
             fetchData(isSwipeToRefresh = true)
         }
     }
@@ -167,7 +169,8 @@ class HomeMatchesFragment : Fragment(),
     }
 
     private fun showLoadingMore(isShowLoading: Boolean) {
-        binding?.homeMatchesProgressBar?.visibility = if (isShowLoading) View.VISIBLE else View.GONE
+        binding?.progressAnimationView?.playAnimation()
+        binding?.progressAnimationView?.visibility = if (isShowLoading) View.VISIBLE else View.GONE
     }
 
     private fun showOrHideLoading(isShowLoading: Boolean) {

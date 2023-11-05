@@ -29,7 +29,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launch {
-            delay(2000)
+            delay(4000)
             handleMatchesScreen()
         }
     }

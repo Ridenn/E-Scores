@@ -60,6 +60,20 @@
         <include layout="@layout/view_home_matches_list_placeholder" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progressAnimationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginHorizontal="120dp"
+        android:layout_marginBottom="-50dp"
+        app:lottie_fileName="pac_man_loading_animation.json"
+        app:lottie_autoPlay="true"
+        app:lottie_repeatMode="restart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ProgressBar
         android:id="@+id/homeMatchesProgressBar"
         android:layout_width="wrap_content"
@@ -69,6 +83,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

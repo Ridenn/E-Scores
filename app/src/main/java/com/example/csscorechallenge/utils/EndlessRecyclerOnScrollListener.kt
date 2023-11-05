@@ -15,10 +15,10 @@ abstract class EndlessRecyclerOnScrollListener(
     private var previousTotal = 0
 
     // True if we are still waiting for the last set of data to load.
-    private var loading = true
+    private var loading = false
 
     // The minimum amount of items to have below your current scroll position before loading more.
-    private val visibleThreshold = 7
+    private val visibleThreshold = 5
 
     private var firstVisibleItem = 0
     private var visibleItemCount: Int = 0
