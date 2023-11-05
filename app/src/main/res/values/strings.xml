@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CS Score Challenge</string>
+    <string name="app_name">E-Scores</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
 
     <string name="matches_toolbar_label">Partidas</string>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/brand"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.example.csscorechallenge.ui.common.TeamPresentationView
@@ -29,31 +30,42 @@
         tools:visibility="visible"
         tools:text="2" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/teamOponentsMatchDetailsDateLabel"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/teamOponentsMatchDetailsLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="60dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        app:layout_constraintVertical_bias="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/teamOponentsFirstTeamView"
         app:layout_constraintEnd_toStartOf="@id/teamOponentsSecondTeamView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Hoje, 14:30" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/teamOponentsMatchDetailsMapInfoLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/font_80"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/teamOponentsFirstTeamView"
-        app:layout_constraintEnd_toStartOf="@id/teamOponentsSecondTeamView"
-        tools:visibility="visible"
-        tools:text="Mapa 2/3" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/teamOponentsMatchDetailsDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:padding="8dp"
+            tools:text="Hoje, 14:30" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/teamOponentsMatchDetailsMapInfoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/font_80"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Mapa 2/3" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.example.csscorechallenge.ui.common.TeamPresentationView
         android:id="@+id/teamOponentsSecondTeamView"

@@ -3,8 +3,10 @@ package com.example.csscorechallenge.ui.common
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.ViewTeamOpponentsMatchDetailsBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
@@ -48,6 +50,10 @@ class TeamOpponentsMatchDetailsView @JvmOverloads constructor(
 
         when (match?.status?.let { MatchStatusUtils.getMatchStatus(it) }) {
             is MatchStatusUtils.MatchStatus.RUNNING -> {
+                binding.teamOponentsMatchDetailsDateLabel.background = AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.bg_match_time_now_rounded_2
+                )
                 binding.teamOponentsMatchDetailsDateLabel.text = context.getString(R.string.matches_now_label)
 
                 binding.teamOponentsFirstTeamScoreView.visible()
@@ -59,15 +65,27 @@ class TeamOpponentsMatchDetailsView @JvmOverloads constructor(
                 binding.teamOponentsMatchDetailsMapInfoLabel.visible()
                 binding.teamOponentsMatchDetailsMapInfoLabel.text = context.getString(
                     R.string.match_details_map_info_label,
-                    match.results?.size.toString(),
+                    getRoundNumber(match),
                     match.numberOfGames.toString()
                 )
             }
             else -> {
+                binding.teamOponentsMatchDetailsLinearLayout.updateLayoutParams<LayoutParams> { verticalBias = 0f }
+
+                binding.teamOponentsMatchDetailsDateLabel.background = AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.bg_match_time_rounded_2
+                )
                 binding.teamOponentsMatchDetailsDateLabel.text = match?.beginAt?.let {
                     FormatDateUtils.convertToReaderReadableDate(it)
                 }
             }
         }
+    }
+
+    private fun getRoundNumber(match: HomeMatchesDomain): String {
+        val firstScore = match.results?.first()?.score ?: 0
+        val secondScore = match.results?.last()?.score ?: 0
+        return (firstScore + secondScore + 1).toString()
     }
 }
