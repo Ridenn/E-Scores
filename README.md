@@ -1,4 +1,4 @@
-# CSScores
+# E-Scores
 
 <p align="center">
     <img src="docs/app_demo.png" height="600">
@@ -6,13 +6,13 @@
 
 ## What is it?
 
-> CS Scores is an Android app to follow Counter Strike matches and live scores based on [PandaScore](https://pandascore.co/) API.
+> E-Scores is an Android app to follow E-Sports such as Counter Strike, League of Legends, Valorant and more games matches, teams and live scores based on [PandaScore](https://pandascore.co/) API.
 ---
 
 ## Content
 > List of all README contents
 
-- [CS Scores](#CSScores)
+- [E-Scores](#E-Scores)
 - [Setup](#setup)
 - [Technologies](#technologies)
 - [License](#license)
