@@ -25,15 +25,6 @@ class SplashFragment : Fragment() {
         return inflateBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launch {
-            delay(4000)
-            handleMatchesScreen()
-        }
-    }
-
     private fun handleMatchesScreen() {
         findNavController().navigate(
             SplashFragmentDirections.toHomeMatches()
@@ -43,6 +34,10 @@ class SplashFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity?)?.supportActionBar?.hide()
+        lifecycleScope.launch {
+            delay(4000)
+            handleMatchesScreen()
+        }
     }
 
     override fun onDestroyView() {
