@@ -22,7 +22,7 @@ import com.example.csscorechallenge.domain.model.PlayerDomain
 import com.example.csscorechallenge.utils.LoadingUtils
 
 class MatchSecondTeamPlayersAdapter(
-    private val teamPlayerList: List<PlayerDomain>,
+    private val teamPlayerList: MutableList<PlayerDomain>,
     private val context: Context
 ) : RecyclerView.Adapter<MatchSecondTeamPlayersAdapter.MatchDetailsAdapterViewHolder>() {
 
@@ -43,6 +43,11 @@ class MatchSecondTeamPlayersAdapter(
     }
 
     override fun getItemCount(): Int = teamPlayerList.size
+
+    fun updateTeamPlayerList() {
+        teamPlayerList.clear()
+        notifyDataSetChanged()
+    }
 
     inner class MatchDetailsAdapterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

@@ -2,11 +2,8 @@ package com.example.csscorechallenge.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.csscorechallenge.MainCoroutineRule
-import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
-import com.example.csscorechallenge.domain.usecase.GetHomeMatchesUseCase
 import com.example.csscorechallenge.domain.usecase.GetMatchDetailsUseCase
-import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -21,12 +18,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.koin.core.context.stopKoin
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import retrofit2.HttpException
-import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.random.Random
@@ -59,7 +53,7 @@ class MatchDetailsViewModelTest {
     fun `should get first team details data then returns loading state equal true`() =
         runTest {
             val id = Random.nextInt()
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             Assert.assertEquals(true, viewModel.showLoadingLiveData.value)
         }
 
@@ -74,7 +68,7 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             advanceUntilIdle()
 
             Assert.assertEquals(false, viewModel.showLoadingLiveData.value)
@@ -91,7 +85,7 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.success(mockedResponse))
             )
 
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -111,7 +105,7 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -132,7 +126,7 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             advanceUntilIdle()
 
             Assert.assertEquals(
@@ -153,7 +147,7 @@ class MatchDetailsViewModelTest {
                 flowOf(Result.failure(mockedThrowable))
             )
 
-            viewModel.getFirstTeamDetails(id = id)
+            viewModel.getFirstTeamDetails(id = id, isBothTeams = true)
             advanceUntilIdle()
 
             Assert.assertEquals(

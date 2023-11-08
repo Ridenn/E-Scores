@@ -8,18 +8,15 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.csscorechallenge.R
 import com.example.csscorechallenge.databinding.FragmentMatchDetailsBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
 import com.example.csscorechallenge.extensions.fadeIn
 import com.example.csscorechallenge.extensions.fadeOut
-import com.example.csscorechallenge.ui.matchdetails.adapter.MatchFirstTeamPlayersAdapter
-import com.example.csscorechallenge.ui.matchdetails.adapter.MatchSecondTeamPlayersAdapter
+import com.example.csscorechallenge.extensions.gone
 import com.example.csscorechallenge.ui.matchdetails.viewmodel.MatchDetailsViewModel
 import com.example.csscorechallenge.utils.AnimationConstants
-import com.example.csscorechallenge.utils.FormatDateUtils
 import com.example.csscorechallenge.utils.ToastUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,6 +44,7 @@ class MatchDetailsFragment : Fragment() {
             MatchDetailsFragmentArgs.fromBundle(requireArguments()).selectedMatch
 
         setupToolbar(match.name)
+        setUpSwipeListener(match)
         setUpViewModelObservers()
         fetchData(match)
         bindMatch(match)
@@ -66,42 +64,53 @@ class MatchDetailsFragment : Fragment() {
         }
     }
 
+    private fun setUpSwipeListener(match: HomeMatchesDomain) {
+        binding?.matchDetailsSwipeRefresh?.setOnRefreshListener {
+            binding?.matchDetailsTeamsPlayers?.updateTeamsList()
+            fetchData(match)
+
+//            lifecycleScope.launch {
+//                delay(AnimationConstants.SHIMMER.LOADING_DELAY)
+//                binding?.matchDetailsLoadingLayout?.stopShimmer()
+//                binding?.matchDetailsLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
+//                    binding?.matchDetailsDetails?.fadeIn()
+//                    binding?.homeMatchesTeamsVersus?.fadeIn()
+//                }
+//            }
+        }
+    }
+
     private fun showOrHideLoading(isShowLoading: Boolean) {
         if (isShowLoading) {
             binding?.matchDetailsLoadingLayout?.startShimmer()
+//            binding?.matchDetailsLoadingLayout?.visible()
+//            binding?.matchDetailsDetails?.gone()
+//            binding?.homeMatchesTeamsVersus?.gone()
+
+            binding?.matchDetailsLoadingLayout?.fadeIn(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
+            binding?.matchDetailsDetails?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
+            binding?.homeMatchesTeamsVersus?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
+
+            binding?.matchDetailsSwipeRefresh?.isRefreshing = false
         } else {
             lifecycleScope.launch {
                 delay(AnimationConstants.SHIMMER.LOADING_DELAY)
                 binding?.matchDetailsLoadingLayout?.stopShimmer()
+
                 binding?.matchDetailsLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
-                    binding?.homeMatchesDetails?.fadeIn()
-                    binding?.homeMatchesTeamsVersus?.fadeIn()
+                    binding?.matchDetailsDetails?.fadeIn(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
+                    binding?.homeMatchesTeamsVersus?.fadeIn(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
                 }
+
+                binding?.matchDetailsLoadingLayout?.gone()
+//                binding?.matchDetailsDetails?.visible()
+//                binding?.homeMatchesTeamsVersus?.visible()
             }
         }
     }
 
     private fun fetchData(match: HomeMatchesDomain) {
-        if (match.opponents?.size == 2) {
-            match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id)
-            }
-            match.opponents.last().opponent?.id?.let { id ->
-                fetchSecondTeamData(id = id)
-            }
-        } else if (match.opponents?.size == 1) {
-            match.opponents.first().opponent?.id?.let { id ->
-                fetchFirstTeamData(id = id)
-            }
-        }
-    }
-
-    private fun fetchFirstTeamData(id: Int) {
-        matchDetailsViewModel.getFirstTeamDetails(id = id)
-    }
-
-    private fun fetchSecondTeamData(id: Int) {
-        matchDetailsViewModel.getSecondTeamDetails(id = id)
+        matchDetailsViewModel.fetchTeamsData(match)
     }
 
     private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetFirstTeamDetailsState) {
@@ -154,13 +163,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindFirstData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            val teamAdapter = team.players?.let { teamPlayerList -> MatchFirstTeamPlayersAdapter(teamPlayerList, requireContext()) }
-
-            binding?.matchDetailsFirstTeamPlayersReciclerView?.apply {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = teamAdapter
-            }
+            binding?.matchDetailsTeamsPlayers?.bindFirstTeamData(team, requireContext())
         } else {
             lifecycleScope.launch {
                 delay(LOADING_DELAY)
@@ -171,13 +174,7 @@ class MatchDetailsFragment : Fragment() {
 
     private fun bindSecondData(team: MatchDetailsDomain) {
         if (team.players?.size != 0) {
-            val teamAdapter = team.players?.let { teamPlayerList -> MatchSecondTeamPlayersAdapter(teamPlayerList, requireContext()) }
-
-            binding?.matchDetailsSecondTeamPlayersReciclerView?.apply {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = teamAdapter
-            }
+            binding?.matchDetailsTeamsPlayers?.bindSecondData(team, requireContext())
         } else {
             lifecycleScope.launch {
                 delay(LOADING_DELAY)
