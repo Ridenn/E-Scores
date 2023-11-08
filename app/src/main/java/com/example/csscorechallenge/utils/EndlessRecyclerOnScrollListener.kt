@@ -8,14 +8,14 @@ abstract class EndlessRecyclerOnScrollListener(
 ) : RecyclerView.OnScrollListener() {
 
     companion object {
-        private const val INITIAL_PAGE = 0
+        private const val INITIAL_PAGE = 1
     }
 
     // The total number of items in the dataset after the last load
     private var previousTotal = 0
 
     // True if we are still waiting for the last set of data to load.
-    private var loading = false
+    private var loading = true
 
     // The minimum amount of items to have below your current scroll position before loading more.
     private val visibleThreshold = 5

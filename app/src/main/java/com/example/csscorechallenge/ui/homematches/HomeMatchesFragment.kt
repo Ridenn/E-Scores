@@ -15,6 +15,7 @@ import com.example.csscorechallenge.databinding.FragmentHomeMatchesBinding
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.extensions.fadeIn
 import com.example.csscorechallenge.extensions.fadeOut
+import com.example.csscorechallenge.extensions.visible
 import com.example.csscorechallenge.ui.homematches.adapter.HomeMatchesAdapter
 import com.example.csscorechallenge.ui.homematches.viewmodel.HomeMatchesViewModel
 import com.example.csscorechallenge.utils.AnimationConstants
@@ -176,6 +177,7 @@ class HomeMatchesFragment : Fragment(),
     private fun showOrHideLoading(isShowLoading: Boolean) {
         if (isShowLoading) {
             binding?.homeMatchesLoadingLayout?.startShimmer()
+            binding?.homeMatchesLoadingLayout?.visible()
 
             // This part is to make the shimmer layout visible again when swipe to refresh
             binding?.homeMatchesRecyclerView?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
