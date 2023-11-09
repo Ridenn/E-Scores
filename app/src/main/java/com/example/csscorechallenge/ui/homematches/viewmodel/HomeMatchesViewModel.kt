@@ -109,13 +109,12 @@ class HomeMatchesViewModel constructor(
                     mergedMatchesList.let { matches -> GetHomeMatchesState.BindData(matches, swipeToRefresh) }
                 )
             }
-            _showLoadingLiveData.postValue(false)
         } else {
-            _showLoadingLiveData.postValue(false)
             result.exceptionOrNull()?.let { throwable ->
                 handleThrowable(throwable)
             }
         }
+        _showLoadingLiveData.postValue(false)
     }
 
     private fun handleThrowable(throwable: Throwable) {

@@ -68,24 +68,12 @@ class MatchDetailsFragment : Fragment() {
         binding?.matchDetailsSwipeRefresh?.setOnRefreshListener {
             binding?.matchDetailsTeamsPlayers?.updateTeamsList()
             fetchData(match)
-
-//            lifecycleScope.launch {
-//                delay(AnimationConstants.SHIMMER.LOADING_DELAY)
-//                binding?.matchDetailsLoadingLayout?.stopShimmer()
-//                binding?.matchDetailsLoadingLayout?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION) {
-//                    binding?.matchDetailsDetails?.fadeIn()
-//                    binding?.homeMatchesTeamsVersus?.fadeIn()
-//                }
-//            }
         }
     }
 
     private fun showOrHideLoading(isShowLoading: Boolean) {
         if (isShowLoading) {
             binding?.matchDetailsLoadingLayout?.startShimmer()
-//            binding?.matchDetailsLoadingLayout?.visible()
-//            binding?.matchDetailsDetails?.gone()
-//            binding?.homeMatchesTeamsVersus?.gone()
 
             binding?.matchDetailsLoadingLayout?.fadeIn(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
             binding?.matchDetailsDetails?.fadeOut(AnimationConstants.SHIMMER.FADE_OUT_DURATION)
@@ -103,8 +91,6 @@ class MatchDetailsFragment : Fragment() {
                 }
 
                 binding?.matchDetailsLoadingLayout?.gone()
-//                binding?.matchDetailsDetails?.visible()
-//                binding?.homeMatchesTeamsVersus?.visible()
             }
         }
     }
