@@ -18,14 +18,14 @@ object FormatDateUtils {
     fun convertToReaderReadableDate(readerDate: String): String? {
         val sdfMonthDay = SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.getDefault())
 
-        val resultDate = readerDate.toDate(DEFAULT_PATTERN_SIMPLE_DATE_FORMAT)
+        val resultDate = readerDate.toDate(DEFAULT_PATTERN_SIMPLE_DATE_FORMAT) ?: Date()
 
         val today = sdfMonthDay.format(Date())
 
-        return if (today == resultDate?.let { sdfMonthDay.format(it) }) {
-            "Hoje, " + resultDate?.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
+        return if (today == resultDate.let { sdfMonthDay.format(it) }) {
+            "Hoje, " + resultDate.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
         } else if (getDaysBetweenDates(today, sdfMonthDay.format(resultDate)) == 1) {
-            "Amanhã, " + resultDate?.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
+            "Amanhã, " + resultDate.let { simpleDateFormat(HOUR_MINUTE_FORMAT).format(it) }
         } else {
             if (getDaysBetweenDates(today, sdfMonthDay.format(resultDate)) > 6) {
                 simpleDateFormat(CALENDAR_FORMAT).format(resultDate)
@@ -46,8 +46,10 @@ object FormatDateUtils {
 
     private fun getDaysBetweenDates(currentDate: String, futureDate: String): Int {
         val format = SimpleDateFormat(SIMPLE_DATE_FORMAT)
-        val milliDifference =
-            kotlin.math.abs(format.parse(currentDate).time - format.parse(futureDate).time)
+        val currentDateParsed = format.parse(currentDate) ?: Date()
+        val futureDateParsed = format.parse(futureDate) ?: Date()
+
+        val milliDifference = kotlin.math.abs(currentDateParsed.time - futureDateParsed.time)
         val daysDifference = milliDifference / (24 * 60 * 60 * 1000) //
 
         return daysDifference.toInt()
