@@ -1,11 +1,13 @@
 package com.example.csscorechallenge.ui.homematches
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -51,10 +53,26 @@ class HomeMatchesFragment : Fragment(),
 
         setUpSwipeListener()
         setUpViewModelObservers()
+        setUpListeners()
+
         if (homeMatchesViewModel.isInitialized()) {
             homeMatchesViewModel.bindInitialState()
         } else {
             fetchData(isSwipeToRefresh = true)
+        }
+    }
+
+    private fun setUpListeners() {
+        binding?.matchesTextView?.setOnClickListener {
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
         }
     }
 

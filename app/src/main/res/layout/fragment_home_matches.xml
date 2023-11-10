@@ -8,23 +8,52 @@
     android:background="@color/brand"
     tools:context=".ui.homematches.HomeMatchesFragment">
 
-    <Toolbar
-        android:id="@+id/homeMatchesToolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/brand"
-        android:layout_marginStart="16dp"
+        app:elevation="0dp"
+        android:theme="@style/Theme.CSScoreChallenge.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/matches_toolbar_label"
-            android:textSize="32sp"
-            android:textColor="@color/white" />
-    </Toolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/homeMatchesToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingHorizontal="16dp"
+            android:background="@color/brand"
+            app:popupTheme="@style/Theme.CSScoreChallenge.PopupOverlay">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/matchesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/matches_toolbar_label"
+                android:textSize="32sp"
+                android:textColor="@color/white" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+<!--    <Toolbar-->
+<!--        android:id="@+id/homeMatchesToolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/brand"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/matches_toolbar_label"-->
+<!--            android:textSize="32sp"-->
+<!--            android:textColor="@color/white" />-->
+<!--    </Toolbar>-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/homeMatchesSwipeRefresh"
@@ -34,7 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeMatchesToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/homeMatchesRecyclerView"
@@ -54,7 +83,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeMatchesToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:visibility="gone">
 
         <include layout="@layout/view_home_matches_list_placeholder" />

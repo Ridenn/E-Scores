@@ -1,10 +1,14 @@
 package com.example.csscorechallenge.ui.matchdetails
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -43,11 +47,25 @@ class MatchDetailsFragment : Fragment() {
         val match: HomeMatchesDomain =
             MatchDetailsFragmentArgs.fromBundle(requireArguments()).selectedMatch
 
-        setupToolbar(match.name)
+//        setupToolbar(match.name, toolbarTitle)
+        setupToolbar(" ${match.name} (${match.league?.name} ${match.serie?.fullName})", getToolbarTitle())
         setUpSwipeListener(match)
         setUpViewModelObservers()
         fetchData(match)
         bindMatch(match)
+    }
+
+    private fun getToolbarTitle(): TextView {
+        val toolbarTitle = TextView(requireContext())
+        toolbarTitle.ellipsize = TextUtils.TruncateAt.MARQUEE
+        toolbarTitle.isFocusable = true
+        toolbarTitle.setTextColor(resources.getColor(R.color.white))
+        toolbarTitle.isFocusableInTouchMode = true
+        toolbarTitle.marqueeRepeatLimit = -1
+        toolbarTitle.isHorizontalScrollBarEnabled = true
+        toolbarTitle.isSingleLine = true
+        toolbarTitle.textSize = 20f
+        return toolbarTitle
     }
 
     private fun setUpViewModelObservers() {
@@ -139,8 +157,18 @@ class MatchDetailsFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "$leagueName $serieName"
     }
 
-    private fun setupToolbar(gameName: String?) {
-        (activity as AppCompatActivity).supportActionBar?.title = "$gameName"
+    private fun setupToolbar(gameName: String?, toolbarTitle: TextView) {
+        (activity as AppCompatActivity).supportActionBar?.customView = toolbarTitle
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowCustomEnabled(true)
+        (activity as AppCompatActivity).supportActionBar?.title = null
+        toolbarTitle.text = "$gameName"
+
+        toolbarTitle.requestFocus()
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            toolbarTitle.isSelected = true
+        }
     }
 
     private fun bindMatch(match: HomeMatchesDomain) {
