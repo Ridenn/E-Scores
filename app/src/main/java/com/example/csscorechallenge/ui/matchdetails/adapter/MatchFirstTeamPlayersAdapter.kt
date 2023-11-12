@@ -77,7 +77,6 @@ class MatchFirstTeamPlayersAdapter(
                 Glide.with(itemTeamPlayerLeftImageView.context)
                     .load(Uri.parse(validUrl.trim()))
                     .transform(MultiTransformation(FitCenter(), RoundedCorners(8)))
-                    .placeholder(loadingProgressBar)
                     .error(errorPlayer)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(itemTeamPlayerLeftImageView)

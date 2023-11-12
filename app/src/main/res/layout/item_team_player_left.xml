@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:background="@color/font_light_grey"
+                android:background="@drawable/ic_players_background"
                 tools:srcCompat="@tools:sample/avatars" />
         </androidx.cardview.widget.CardView>
 
