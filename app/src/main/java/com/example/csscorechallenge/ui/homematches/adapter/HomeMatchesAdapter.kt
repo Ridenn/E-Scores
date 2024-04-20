@@ -78,11 +78,11 @@ class HomeMatchesAdapter(
         private val leagueSeriesView: LeagueSeriesView =
             view.findViewById(R.id.homeMatchesLeagueSeries)
 
-        private val homeMatchesTimeView: LinearLayoutCompat =
-            view.findViewById(R.id.homeMatchesTime)
+//        private val homeMatchesTimeView: LinearLayoutCompat =
+//            view.findViewById(R.id.homeMatchesTime)
 
         fun bind(match: HomeMatchesDomain) {
-            homeMatchesTimeView.apply {
+            homeMatchesDateView.apply {
                 when (match.status?.let { MatchStatusUtils.getMatchStatus(it) }) {
                     is MatchStatusUtils.MatchStatus.RUNNING -> {
                         background = AppCompatResources.getDrawable(

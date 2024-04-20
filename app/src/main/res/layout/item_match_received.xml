@@ -24,26 +24,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/homeMatchesTime"
+            <TextView
+                android:id="@+id/homeMatchesDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="11sp"
                 android:background="@drawable/bg_match_time_rounded"
+                android:textStyle="bold"
                 android:gravity="center"
                 android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="AGORA" />
 
-                <TextView
-                    android:id="@+id/homeMatchesDateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    tools:text="AGORA" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--                android:id="@+id/homeMatchesTime"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/bg_match_time_rounded"-->
+<!--                android:gravity="center"-->
+<!--                android:padding="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"/>-->
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/dsdsd"
@@ -53,7 +56,7 @@
                 android:layout_marginTop="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/homeMatchesTime">
+                app:layout_constraintTop_toBottomOf="@+id/homeMatchesDateTextView">
 
                 <com.example.csscorechallenge.ui.common.TeamOpponentsView
                     android:id="@+id/homeMatchesTeamOpponents"

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetMatchDetailsUseCase @Inject constructor(
@@ -19,7 +20,9 @@ class GetMatchDetailsUseCase @Inject constructor(
         flow {
             val result = repository.getMatchDetails(id)
             emit(Result.success(result))
-        }
-            .flowOn(defaultDispatcher)
-            .catch { throwable -> emit(Result.failure(throwable)) }
+        }.flowOn(defaultDispatcher)
+            .catch { throwable ->
+                Timber.e("Error when fetching match details: $id", throwable)
+                emit(Result.failure(throwable))
+            }
 }
