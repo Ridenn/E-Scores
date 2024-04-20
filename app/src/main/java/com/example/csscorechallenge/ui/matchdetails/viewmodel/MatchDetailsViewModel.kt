@@ -7,36 +7,41 @@ import androidx.lifecycle.viewModelScope
 import com.example.csscorechallenge.domain.model.HomeMatchesDomain
 import com.example.csscorechallenge.domain.model.MatchDetailsDomain
 import com.example.csscorechallenge.domain.usecase.GetMatchDetailsUseCase
-import com.example.csscorechallenge.utils.SingleLiveEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class MatchDetailsViewModel constructor(
+class MatchDetailsViewModel (
     private val getMatchDetailsUseCase: GetMatchDetailsUseCase
 ) : ViewModel() {
 
     private val _showLoadingLiveData by lazy { MutableLiveData<Boolean>() }
     val showLoadingLiveData = _showLoadingLiveData
 
-    fun fetchTeamsData(match: HomeMatchesDomain) {
+    fun fetchTeamsDetails(match: HomeMatchesDomain) {
         val firstTeamId = match.opponents?.first()?.opponent?.id
         val secondTeamId = match.opponents?.last()?.opponent?.id
 
-        if (match.opponents?.size == 2 &&
-            firstTeamId != null &&
-            secondTeamId != null
-            )
-        {
-            getFirstTeamDetails(firstTeamId, isBothTeams = true)
-            getSecondTeamDetails(secondTeamId)
-        } else {
-            if (firstTeamId != null) {
-                getFirstTeamDetails(firstTeamId)
+        viewModelScope.launch {
+            firstTeamId?.let {
+                _showLoadingLiveData.postValue(true)
+
+                if (match.opponents.size == 2 && secondTeamId != null) {
+                    getMatchDetailsUseCase.getMatchDetails(firstTeamId)
+                        .zip(getMatchDetailsUseCase.getMatchDetails(secondTeamId)) { firstResult, secondResult ->
+                            Pair(firstResult, secondResult)
+                        } .collect { pair ->
+                            handleGetMatchDetailsResult(pair.first, pair.second)
+                        }
+                } else {
+                    getMatchDetailsUseCase.getMatchDetails(firstTeamId)
+                        .collect { result -> handleGetMatchDetailsResult(result) }
+                }
             }
         }
     }
@@ -54,34 +59,36 @@ class MatchDetailsViewModel constructor(
     private val _getFirstTeamDetailsLiveData by lazy { MutableLiveData<GetFirstTeamDetailsState>() }
     val getFirstTeamDetailsLiveData = _getFirstTeamDetailsLiveData
 
-    fun getFirstTeamDetails(id: Int, isBothTeams: Boolean = false) {
-        _showLoadingLiveData.postValue(true)
-        viewModelScope.launch {
-            getMatchDetailsUseCase.getMatchDetails(id)
-                .collect { result ->
-                    handleGetMatchDetailsResult(result, isBothTeams)
-                }
+    private fun handleGetMatchDetailsResult(
+        firstTeamResult: Result<MatchDetailsDomain>,
+        secondTeamResult: Result<MatchDetailsDomain>? = null
+    ) {
+        val firstTeamMatchDetails = firstTeamResult.getOrNull()
+        val secondTeamMatchDetails = secondTeamResult?.getOrNull()
+
+        firstTeamMatchDetails?.let { postTeamMatchDetails(firstTeamResult, it, true) }
+        secondTeamMatchDetails?.let { postTeamMatchDetails(secondTeamResult, it) }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(500)
+            _showLoadingLiveData.postValue(false)
         }
     }
 
-    private fun handleGetMatchDetailsResult(
-        result: Result<MatchDetailsDomain>,
-        isBothTeams: Boolean
+    private fun postTeamMatchDetails(
+        teamResult: Result<MatchDetailsDomain>,
+        teamMatchDetails: MatchDetailsDomain,
+        isFirstTeam: Boolean = false
     ) {
-        val matchDetails = result.getOrNull()
-        if (result.isSuccess && matchDetails != null) {
-            _getFirstTeamDetailsLiveData.postValue(
-                GetFirstTeamDetailsState.BindData(matchDetails)
-            )
-        } else {
-            result.exceptionOrNull()?.let { throwable ->
-                handleFirstTeamThrowable(throwable)
+        if (teamResult.isSuccess) {
+            if (isFirstTeam) {
+                _getFirstTeamDetailsLiveData.postValue(GetFirstTeamDetailsState.BindData(teamMatchDetails))
+            } else {
+                _getSecondTeamDetailsLiveData.postValue(GetSecondTeamDetailsState.BindData(teamMatchDetails))
             }
-        }
-        if (!isBothTeams) {
-            CoroutineScope(Dispatchers.IO).launch {
-                delay(2000)
-                _showLoadingLiveData.postValue(false)
+        } else {
+            teamResult.exceptionOrNull()?.let { throwable ->
+                handleFirstTeamThrowable(throwable)
             }
         }
     }
@@ -96,37 +103,8 @@ class MatchDetailsViewModel constructor(
         object TimeoutError : GetSecondTeamDetailsState()
     }
 
-    private val _getSecondTeamDetailsLiveData by lazy { SingleLiveEvent<GetSecondTeamDetailsState>() }
+    private val _getSecondTeamDetailsLiveData by lazy { MutableLiveData<GetSecondTeamDetailsState>() }
     val getSecondTeamDetailsLiveData: LiveData<GetSecondTeamDetailsState> = _getSecondTeamDetailsLiveData
-
-    fun getSecondTeamDetails(id: Int) {
-        _showLoadingLiveData.postValue(true)
-        viewModelScope.launch {
-            getMatchDetailsUseCase.getMatchDetails(id)
-                .collect { result ->
-                    handleGetSecondTeamDetailsResult(result)
-                }
-        }
-    }
-
-    private fun handleGetSecondTeamDetailsResult(
-        result: Result<MatchDetailsDomain>
-    ) {
-        val matchDetails = result.getOrNull()
-        if (result.isSuccess && matchDetails != null) {
-            _getSecondTeamDetailsLiveData.postValue(
-                GetSecondTeamDetailsState.BindData(matchDetails)
-            )
-        } else {
-            result.exceptionOrNull()?.let { throwable ->
-                handleSecondTeamThrowable(throwable)
-            }
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(500)
-            _showLoadingLiveData.postValue(false)
-        }
-    }
 
     private fun handleFirstTeamThrowable(throwable: Throwable) {
         when (throwable) {

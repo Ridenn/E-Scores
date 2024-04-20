@@ -25,6 +25,7 @@ import com.example.csscorechallenge.utils.ToastUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MatchDetailsFragment : Fragment() {
 
@@ -59,7 +60,10 @@ class MatchDetailsFragment : Fragment() {
         val toolbarTitle = TextView(requireContext())
         toolbarTitle.ellipsize = TextUtils.TruncateAt.MARQUEE
         toolbarTitle.isFocusable = true
-        toolbarTitle.setTextColor(resources.getColor(R.color.white))
+        with(context) {
+            resources.getColor(R.color.white, this?.theme)
+                .let { toolbarTitle.setTextColor(it) }
+        }
         toolbarTitle.isFocusableInTouchMode = true
         toolbarTitle.marqueeRepeatLimit = -1
         toolbarTitle.isHorizontalScrollBarEnabled = true
@@ -114,7 +118,7 @@ class MatchDetailsFragment : Fragment() {
     }
 
     private fun fetchData(match: HomeMatchesDomain) {
-        matchDetailsViewModel.fetchTeamsData(match)
+        matchDetailsViewModel.fetchTeamsDetails(match)
     }
 
     private fun handleGetTeamDetails(matchDetailsState: MatchDetailsViewModel.GetFirstTeamDetailsState) {
@@ -123,7 +127,7 @@ class MatchDetailsFragment : Fragment() {
                 bindFirstData(matchDetailsState.team)
             }
             is MatchDetailsViewModel.GetFirstTeamDetailsState.Failure -> {
-                Log.w("Error", matchDetailsState.throwable)
+                Timber.w("Error: ${matchDetailsState.throwable}")
                 showGenericError()
             }
             is MatchDetailsViewModel.GetFirstTeamDetailsState.NetworkError -> {
@@ -141,7 +145,7 @@ class MatchDetailsFragment : Fragment() {
                 bindSecondData(matchDetailsState.team)
             }
             is MatchDetailsViewModel.GetSecondTeamDetailsState.Failure -> {
-                Log.w("Error", matchDetailsState.throwable)
+                Timber.w("Error: ${matchDetailsState.throwable}")
                 showGenericError()
             }
             is MatchDetailsViewModel.GetSecondTeamDetailsState.NetworkError -> {
